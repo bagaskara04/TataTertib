@@ -11,7 +11,7 @@ $connInfo = array(
 $conn = sqlsrv_connect($host, $connInfo);
 
 if ($conn) {
-    echo "Koneksi Berhasil.<br/>";
+    
 } else {
     echo "Koneksi Gagal.<br/>";
     die(print_r(sqlsrv_errors(), true));
