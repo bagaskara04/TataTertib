@@ -238,24 +238,26 @@
         fetchKelas(selectedProdiId); // Memuat data Kelas berdasarkan Prodi
     });
 
-    // Hapus Mahasiswa
+    // Fungsi untuk menghapus Mahasiswa
     $(document).on('click', '.deleteStudent', function () {
-        const studentId = $(this).data('id');
-        if (confirm('Yakin ingin menghapus data ini?')) {
-            $.ajax({
-                url: 'deleteMahasiswa.php',
-                method: 'POST',
-                data: { id: studentId },
-                success: function (response) {
-                    alert(response);
-                    fetchStudents();
-                },
-                error: function (xhr, status, error) {
-                    console.error(xhr.responseText);
-                }
-            });
-        }
-    });
+            const studentId = $(this).data('id'); // Mendapatkan ID mahasiswa
+            if (confirm('Yakin ingin menghapus data ini?')) { // Konfirmasi penghapusan
+                $.ajax({
+                    url: 'deleteMahasiswa.php', // Endpoint penghapusan
+                    method: 'POST',
+                    data: { id: studentId }, // Kirim data ID mahasiswa untuk dihapus
+                    success: function (response) {
+                        alert(response); // Tampilkan pesan sukses
+                        fetchStudents(); // Refresh data mahasiswa setelah penghapusan
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText); // Tampilkan error di console
+                        alert("Terjadi kesalahan saat menghapus data mahasiswa."); // Tampilkan pesan error
+                    }
+                });
+            }
+        });
+
 
     // Tambah Mahasiswa
     $('#addStudentForm').on('submit', function (e) {
