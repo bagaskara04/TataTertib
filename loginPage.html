@@ -10,13 +10,27 @@
 <body>
     <div class="login-container">
         <h2>Welcome to<br><span class="orange-text">SITATIB</span> POLINEMA</h2>
-        <form>
+        <form action="prosesLogin.php" method="POST">
             <img src="assets/LogoPolinema.png" alt="Polinema Logo" class="logo">
-            <input type="text" placeholder="Username" required>
-            <input type="password" placeholder="Password" required>
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+            <div class="show-password">
+                <input type="checkbox" id="showPassword" onclick="togglePassword()"> 
+                <label for="showPassword">Tampilkan Password</label>
+            </div>
             <button type="submit">Login</button>
             <a href="lupaPassword.html">Lupa password?</a>
         </form>
     </div>
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+            } else {
+                passwordInput.type = 'password';
+            }
+        }
+    </script>
 </body>
 </html>
