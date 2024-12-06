@@ -1,23 +1,28 @@
 <?php
 session_start();
-include 'koneksi.php'; // Hubungkan dengan database
+include 'koneksi.php'; // Menghubungkan dengan file koneksi yang berisi kode di atas
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Ambil data dari form
-    $username = mysqli_real_escape_string($conn, $_POST['username']);
-    $password = mysqli_real_escape_string($conn, $_POST['password']);
-
-    // Enkripsi password dengan MD5 sesuai dengan database Anda
-    $hashed_password = md5($password);
+    // Mengambil data dari form
+    $username = $_POST['username'];  
+    $password = $_POST['password'];  // Tidak melakukan enkripsi password
 
     // Query untuk memeriksa username dan password
-    $sql = "SELECT * FROM [user] WHERE username = '$username' AND password = '$hashed_password'";
-    $result = mysqli_query($conn, $sql);
+    $sql = "SELECT * FROM users WHERE username = ? AND password = ?";  // Sesuaikan dengan nama tabel yang benar
+    
+    // Menyiapkan query
+    $params = array($username, $password);
+    $stmt = sqlsrv_query($conn, $sql, $params);
 
-    if (mysqli_num_rows($result) == 1) {
-        $user = mysqli_fetch_assoc($result);
+    if ($stmt === false) {
+        die(print_r(sqlsrv_errors(), true));
+    }
 
-        // Simpan data user ke session
+    if (sqlsrv_has_rows($stmt)) {
+        // Mengambil data user
+        $user = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+
+        // Menyimpan data user ke dalam session
         $_SESSION['user_id'] = $user['user_id'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['level'] = $user['level'];
@@ -25,13 +30,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Redirect berdasarkan level user
         switch ($user['level']) {
             case 1: // Admin
-                header("Location: adminDashboard.php");
+                header("Location: admin/dashboardAdmin.html");
                 break;
             case 2: // Dosen
-                header("Location: dosenDashboard.php");
+                header("Location: dosen/dashboardDosen.php");
                 break;
             case 3: // Mahasiswa
-                header("Location: mahasiswaDashboard.php");
+                header("Location: mahasiswa/dashboardMahasiswa.php");
                 break;
             default:
                 echo "<script>alert('Level user tidak valid!'); window.location.href = 'loginPage.html';</script>";
