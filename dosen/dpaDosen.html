@@ -1,0 +1,56 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
+    header("Location: loginPage.html");
+    exit();
+}
+
+include 'koneksi.php';
+
+// Ambil data DPA dari session
+$dpaKelas = $_SESSION['dpa_kelas'];
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Dosen</title>
+    <!-- Link ke Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Link ke StyleDosen.css -->
+    <link rel="stylesheet" href="styleDosen.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Daftar Kelas dan DPA</h1>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Kelas</th>
+                    <th>Nama DPA</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($row['nama_kelas']) ?></td>
+                        <td><?= htmlspecialchars($row['nama_dpa']) ?></td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
+        
+<div class="dpa-container">
+    <ul>
+        <?php while ($row = mysqli_fetch_assoc($result)): ?>
+            <li>
+                <span class="class-name"><?= htmlspecialchars($row['nama_kelas']) ?></span>
+                <span class="dpa-name">DPA: <?= htmlspecialchars($row['nama_dpa']) ?></span>
+            </li>
+        <?php endwhile; ?>
+    </ul>
+</div>
+</body>
+</html>
