@@ -5,11 +5,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nim = mysqli_real_escape_string($conn, $_POST['nim']);
     $password = mysqli_real_escape_string($conn, $_POST['password']);
 
-    // Hash password baru
-    $hashedPassword = md5($password);
-
     // Update password di database
-    $query = "UPDATE [user] SET password = '$hashedPassword' WHERE username = '$nim'";
+    $query = "UPDATE users SET password = '$password' WHERE username = '$nim'";  // Pastikan kolom username sesuai
     if (mysqli_query($conn, $query)) {
         echo "<script>
                 alert('Password berhasil diperbarui! Silakan login.');
