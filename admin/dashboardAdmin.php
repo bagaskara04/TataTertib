@@ -1,3 +1,12 @@
+<?php
+include 'getAdminName.php';
+// Periksa apakah user sudah login dan levelnya admin
+if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 1) {
+    header("Location: ../loginPage.html"); // Redirect ke halaman login
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -63,7 +72,7 @@
                 <li class="active"><a href="dashboardAdmin.html"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
                 <li class="active"><a href="dataMahasiswa.html"><i class="fa fa-users"></i> <span>Data Mahasiswa</span></a></li>
                 <li class="active"><a href="dataDosen.html"><i class="fa fa-users"></i> <span>Data Dosen</span></a></li>
-                <li><a href="#"><i class="fa fa-share"></i> <span>Multilevel</span></a></li>
+                <li class="active"><a href="dataLaporan.html"><i class="fa fa-file-text-o"></i> <span>Data Laporan Pelanggaran</span></a></li>
             </ul>
         </section>
     </aside>
@@ -79,7 +88,7 @@
                     <h3 class="box-title">Welcome ...</h3>
                 </div>
                 <div class="box-body">
-                    <h1>Selamat Datang nama Admin</h1>
+                    <h1>Selamat Datang <?php echo htmlspecialchars($nama_admin);?></h1>
                 </div>
                 <div class="box-footer">
                     Footer

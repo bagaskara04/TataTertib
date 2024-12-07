@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Redirect berdasarkan level user
         switch ($user['level']) {
             case 1: // Admin
-                header("Location: admin/dashboardAdmin.html");
+                header("Location: admin/dashboardAdmin.php");
                 break;
             case 2: // Dosen
                 header("Location: dosen/dashboardDosen.php");
