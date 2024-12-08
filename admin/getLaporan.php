@@ -46,6 +46,7 @@ while ($row = sqlsrv_fetch_array($sqlsrv_query, SQLSRV_FETCH_ASSOC)) {
             <td>' . htmlspecialchars($row['catatan']) . '</td>
             <td>
                 <button class="btn btn-info btn-sm detailBtn" data-id="' . htmlspecialchars($row['pengaduan_id']) . '">Detail</button>
+                <button class="btn btn-warning btn-sm editBtn" data-id="' . htmlspecialchars($row['pengaduan_id']) . '" data-status="' . htmlspecialchars($row['status_pengaduan']) . '">Edit</button>
             </td>
         </tr>
     ';
