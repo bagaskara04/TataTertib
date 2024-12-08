@@ -5,6 +5,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
     header("Location: ../loginPage.html"); // Redirect ke halaman login
     exit();
 }
+
+//ambil nama dari dosen
+
 ?>
 
 <!DOCTYPE html>
@@ -63,14 +66,14 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
                     <img src="../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <p>Atiqah</p>
+                    <p><?php echo htmlspecialchars($nama_dosen); ?></p>
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
             <ul class="sidebar-menu">
                 <li class="header">MAIN NAVIGATION</li>
                 <li class="active"><a href="dashboardAdmin.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-                <li><a href="dataLaporan.html"><i class="fa fa-file-text-o"></i> <span>Data Laporan Pelanggaran</span></a></li>
+                <li><a href="dpaDosen.html"><i class="fa fa-users"></i> <span>Daftar DPA</span></a></li>
                 <li><a href="../logout.php"><i class="fa fa-exit"></i><span>Log Out</span></a></li>
             </ul>
         </section>
