@@ -5,13 +5,21 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
     exit();
 }
 
-include 'koneksi.php';
+include 'koneksi.php';  // Include your connection file
 
 // Ambil data kelas dan DPA dari database
 $query = "SELECT kelas.nama_kelas, dosen.nama AS nama_dpa 
           FROM kelas 
           JOIN dosen ON kelas.dpa_id = dosen.dosen_id";
-$result = mysqli_query($conn, $query);
+
+// Execute query using sqlsrv_query
+$result = sqlsrv_query($conn, $query);
+
+// Check if query executed successfully
+if (!$result) {
+    echo "Error in query execution.<br />";
+    die(print_r(sqlsrv_errors(), true));
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,16 +28,13 @@ $result = mysqli_query($conn, $query);
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar DPA</title>
-    <!-- Link ke Bootstrap dan AdminLTE -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/AdminLTE.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/skins/_all-skins.min.css">
-    <!-- Link ke CSS khusus -->
     <link rel="stylesheet" href="styleDosen.css">
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
-    <!-- Header -->
     <header class="main-header">
         <a href="dashboardDosen.php" class="logo">
             <span class="logo-mini"><b>D</b>DS</span>
@@ -42,7 +47,6 @@ $result = mysqli_query($conn, $query);
         </nav>
     </header>
 
-    <!-- Sidebar -->
     <aside class="main-sidebar">
         <section class="sidebar">
             <div class="user-panel">
@@ -62,14 +66,12 @@ $result = mysqli_query($conn, $query);
         </section>
     </aside>
 
-    <!-- Content Wrapper -->
     <div class="content-wrapper">
         <section class="content-header">
             <h1>Daftar DPA</h1>
             <small>Informasi kelas dan DPA</small>
         </section>
         <section class="content">
-            <!-- Box -->
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">Daftar Kelas dan DPA</h3>
@@ -77,7 +79,7 @@ $result = mysqli_query($conn, $query);
                 <div class="box-body">
                     <div class="dpa-container">
                         <ul>
-                            <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                            <?php while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)): ?>
                                 <li>
                                     <span class="class-name"><?= htmlspecialchars($row['nama_kelas']) ?></span>
                                     <span class="dpa-name">DPA: <?= htmlspecialchars($row['nama_dpa']) ?></span>
@@ -93,7 +95,6 @@ $result = mysqli_query($conn, $query);
         </section>
     </div>
 
-    <!-- Footer -->
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
             <b><a href="#">Jurusan Teknologi Informasi</a></b>
@@ -102,7 +103,6 @@ $result = mysqli_query($conn, $query);
     </footer>
 </div>
 
-<!-- Script -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/js/app.min.js"></script>

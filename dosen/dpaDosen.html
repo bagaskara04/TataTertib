@@ -1,56 +1,166 @@
-<?php
-session_start();
-if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
-    header("Location: loginPage.html");
-    exit();
-}
-
-include 'koneksi.php';
-
-// Ambil data DPA dari session
-$dpaKelas = $_SESSION['dpa_kelas'];
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Dosen</title>
-    <!-- Link ke Bootstrap -->
+    <title>Daftar DPA</title>
+    <!-- Link ke Bootstrap dan AdminLTE -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <!-- Link ke StyleDosen.css -->
-    <link rel="stylesheet" href="styleDosen.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/skins/_all-skins.min.css">
+    <style>
+        .main-header .navbar {
+            background-color: #115599 !important;
+        }
+
+        /* Menambahkan CSS untuk memperbesar judul */
+        .page-title {
+            font-size: 40px !important; /* Ukuran font lebih besar */
+            font-weight: bold;
+            color: #115599; /* Warna teks */
+            text-align: left; /* Rata tengah */
+            margin-bottom: 30px; /* Memberikan jarak bawah */
+        }
+
+        /* Custom Styles lainnya */
+        .content-wrapper {
+            padding: 30px;
+        }
+
+        .box {
+            margin-bottom: 30px;
+        }
+
+        .table {
+            margin-top: 20px;
+        }
+
+        .dpa-container ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .dpa-container li {
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .dpa-container .class-name {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .dpa-container .dpa-name {
+            color: #777;
+            font-style: italic;
+        }
+    </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Daftar Kelas dan DPA</h1>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Kelas</th>
-                    <th>Nama DPA</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($row = mysqli_fetch_assoc($result)): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($row['nama_kelas']) ?></td>
-                        <td><?= htmlspecialchars($row['nama_dpa']) ?></td>
-                    </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <!-- Header -->
+    <header class="main-header">
+        <a href="dashboardDosen.html" class="logo">
+            <span class="logo-mini"><b>D</b>DS</span>
+            <span class="logo-lg">Dashboard <b>Dosen</b></span>
+        </a>
+        <nav class="navbar navbar-static-top">
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+        </nav>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="main-sidebar">
+        <section class="sidebar">
+            <div class="user-panel">
+                <div class="pull-left image">
+                    <img src="https://via.placeholder.com/160" class="img-circle" alt="User Image">
+                </div>
+                <div class="pull-left info">
+                    <p>Dosen Teknik Informatika</p>
+                    <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                </div>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="header">MAIN NAVIGATION</li>
+                <li class="active"><a href="dashboardDosen.html"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                <li><a href="dpaDosen.html"><i class="fa fa-users"></i> <span>Daftar DPA</span></a></li>
+            </ul>
+        </section>
+    </aside>
+
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <section class="content">
+            <!-- Box -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h1 class="page-title">Daftar Kelas dan DPA</h1>
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- Table with DPA data -->
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Kelas</th>
+                                        <th>Nama DPA</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($row['nama_kelas']) ?></td>
+                                            <td><?= htmlspecialchars($row['nama_dpa']) ?></td>
+                                        </tr>
+                                    <?php endwhile; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- DPA List -->
+                            <div class="dpa-container">
+                                <ul>
+                                    <?php mysqli_data_seek($result, 0); // Reset result pointer ?>
+                                    <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                                        <li>
+                                            <span class="class-name"><?= htmlspecialchars($row['nama_kelas']) ?></span>
+                                            <span class="dpa-name">DPA: <?= htmlspecialchars($row['nama_dpa']) ?></span>
+                                        </li>
+                                    <?php endwhile; ?>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <p>Pastikan data yang ditampilkan sudah benar.</p>
+                </div>
+            </div>
+        </section>
     </div>
-        
-<div class="dpa-container">
-    <ul>
-        <?php while ($row = mysqli_fetch_assoc($result)): ?>
-            <li>
-                <span class="class-name"><?= htmlspecialchars($row['nama_kelas']) ?></span>
-                <span class="dpa-name">DPA: <?= htmlspecialchars($row['nama_dpa']) ?></span>
-            </li>
-        <?php endwhile; ?>
-    </ul>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b><a href="#">Jurusan Teknologi Informasi</a></b>
+        </div>
+        <strong><a href="#">Politeknik Negeri Malang</a></strong>
+    </footer>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/js/app.min.js"></script>
 </body>
 </html>
