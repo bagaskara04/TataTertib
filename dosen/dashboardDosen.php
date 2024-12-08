@@ -1,7 +1,7 @@
 <?php
-include 'getAdminName.php';
+include 'getDosenName.php';
 // Periksa apakah user sudah login dan levelnya admin
-if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 1) {
+if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
     header("Location: ../loginPage.html"); // Redirect ke halaman login
     exit();
 }
@@ -88,7 +88,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 1) {
                     <h3 class="box-title">Welcome ...</h3>
                 </div>
                 <div class="box-body">
-                    <h1>Selamat Datang <?php echo htmlspecialchars($nama_admin);?></h1>
+                    <h1>Selamat Datang <?php echo htmlspecialchars($nama_dosen);?></h1>
                 </div>
                 <div class="box-footer">
                     Footer
