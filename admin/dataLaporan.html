@@ -54,9 +54,10 @@
             </div>
             <ul class="sidebar-menu">
                 <li class="header">MAIN NAVIGATION</li>
-                <li class="active"><a href="dashboardAdmin.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-                <li class="active"><a href="dataMahasiswa.html"><i class="fa fa-users"></i> <span>Data Mahasiswa</span></a></li>
-                <li class="active"><a href="dataDosen.html"><i class="fa fa-users"></i> <span>Data Dosen</span></a></li>
+                <li><a href="dashboardAdmin.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                <li><a href="dataMahasiswa.html"><i class="fa fa-users"></i> <span>Data Mahasiswa</span></a></li>
+                <li><a href="dataDosen.html"><i class="fa fa-users"></i> <span>Data Dosen</span></a></li>
+                <li><a href="dataDPA.html"><i class="fa fa-file-text-o"></i> <span>Data DPA</span></a></li>
                 <li class="active"><a href="dataLaporan.html"><i class="fa fa-file-text-o"></i> <span>Data Laporan Pelanggaran</span></a></li>
             </ul>
         </section>
@@ -83,7 +84,7 @@
                         <thead>
                             <tr>
                                 <th>ID Laporan</th>
-                                <th>Nama Dosen</th>
+                                <th>Dosen Pelapor</th>
                                 <th>Nama Mahasiswa</th>
                                 <th>NIM</th>
                                 <th>Pelanggaran</th>
@@ -156,6 +157,10 @@
                         <label for="catatan">Catatan</label>
                         <textarea class="form-control" id="catatan" readonly></textarea>
                     </div>
+                    <div class="form-group">
+                        <label for="buktiPelanggaran">Bukti Pelanggaran</label>
+                        <a href="#" id="buktiPelanggaran" target="_blank" class="form-control">Lihat Bukti</a>
+                    </div>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
                 </form>
             </div>
@@ -209,28 +214,46 @@ fetchLaporan();
 
 
         // Detail button event handler
-        $(document).on('click', '.detailBtn', function () {
-            var laporanId = $(this).data('id');
-            // Fetch detail data based on laporanId
-            $.ajax({
-                url: 'get_laporan_detail.php', // Ganti dengan file PHP yang sesuai
-                method: 'GET',
-                data: { id: laporanId },
-                success: function (data) {
-                    var detail = JSON.parse(data);
-                    // Update the modal with data
-                    $('#dosenNama').val(detail.dosen_nama);
-                    $('#mahasiswaNama').val(detail.mahasiswa_nama);
-                    $('#pelanggaran').val(detail.pelanggaran);
-                    $('#tingkat').val(detail.tingkat);
-                    $('#sanksi').val(detail.sanksi);
-                    $('#tanggalPengaduan').val(detail.tanggal_pengaduan);
-                    $('#statusPengaduan').val(detail.status_pengaduan);
-                    $('#catatan').val(detail.catatan);
-                    $('#detailLaporanModal').modal('show');
+$(document).on('click', '.detailBtn', function () {
+    var laporanId = $(this).data('id');
+    // Ambil data detail laporan berdasarkan laporanId
+    $.ajax({
+        url: 'getDetailLaporan.php', // Ganti dengan URL file PHP yang sesuai
+        method: 'GET',
+        data: { id: laporanId },
+        success: function (data) {
+            var detail = JSON.parse(data);
+            // Periksa apakah data detail ditemukan
+            if (detail.error) {
+                alert(detail.error);
+            } else {
+                // Update modal dengan data yang diterima
+                $('#dosenNama').val(detail.dosen_nama);
+                $('#mahasiswaNama').val(detail.mahasiswa_nama);
+                $('#pelanggaran').val(detail.pelanggaran);
+                $('#tingkat').val(detail.tingkat);
+                $('#sanksi').val(detail.sanksi);
+                $('#tanggalPengaduan').val(detail.tanggal_pengaduan);
+                $('#statusPengaduan').val(detail.status_pengaduan);
+                $('#catatan').val(detail.catatan);
+                if (detail.bukti_pelanggaran) {
+                    $('#buktiPelanggaran').attr('href', detail.bukti_pelanggaran);
+                    $('#buktiPelanggaran').text('Lihat Bukti');
+                } else {
+                    $('#buktiPelanggaran').attr('href', '#');
+                    $('#buktiPelanggaran').text('Bukti Tidak Tersedia');
                 }
-            });
-        });
+                // Tampilkan modal
+                $('#detailLaporanModal').modal('show');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error(xhr.responseText);
+            alert("Terjadi kesalahan saat mengambil data laporan.");
+        }
+    });
+});
+
     });
 </script>
 </body>

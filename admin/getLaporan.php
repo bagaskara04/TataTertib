@@ -11,8 +11,7 @@ $query = "SELECT
     pelang.pelanggaran,
     pelang.tingkat,
     sp.nama_sanksi AS sanksi,
-    p.bukti_pelanggaran,
-    p.tanggal_pengaduan,
+    FORMAT(p.tanggal_pengaduan, 'yyyy-MM-dd HH:mm:ss') AS tanggal_pengaduan,
     p.status_pengaduan,
     p.catatan
 FROM pengaduan p
@@ -20,23 +19,40 @@ JOIN dosen d ON p.nip = d.nip
 JOIN mahasiswa m ON p.nim = m.nim
 JOIN pelanggaran pelang ON p.pelanggaran_id = pelang.pelanggaran_id
 JOIN sanksi_pelanggaran sp ON pelang.sanksi_id = sp.sanksi_id
-ORDER BY p.tanggal_pengaduan DESC;"; // Replace with your actual table name
+ORDER BY p.tanggal_pengaduan DESC;";
 
 // Execute the query
 $sqlsrv_query = sqlsrv_query($conn, $query);
 
-// Check if any rows are returned
+// Check if the query was successful
 if ($sqlsrv_query === false) {
     die(print_r(sqlsrv_errors(), true));
 }
 
-$laporan = array();
+// Prepare the data for output
+$output = '';
 while ($row = sqlsrv_fetch_array($sqlsrv_query, SQLSRV_FETCH_ASSOC)) {
-    $laporan[] = $row;
+    $output .= '
+        <tr>
+            <td>' . htmlspecialchars($row['pengaduan_id']) . '</td>
+            <td>' . htmlspecialchars($row['dosen_nama']) . '</td>
+            <td>' . htmlspecialchars($row['mahasiswa_nama']) . '</td>
+            <td>' . htmlspecialchars($row['nim']) . '</td>
+            <td>' . htmlspecialchars($row['pelanggaran']) . '</td>
+            <td>' . htmlspecialchars($row['tingkat']) . '</td>
+            <td>' . htmlspecialchars($row['sanksi']) . '</td>
+            <td>' . htmlspecialchars($row['tanggal_pengaduan']) . '</td>
+            <td>' . htmlspecialchars($row['status_pengaduan']) . '</td>
+            <td>' . htmlspecialchars($row['catatan']) . '</td>
+            <td>
+                <button class="btn btn-info btn-sm detailBtn" data-id="' . htmlspecialchars($row['pengaduan_id']) . '">Detail</button>
+            </td>
+        </tr>
+    ';
 }
 
-// Return the data as JSON
-echo json_encode($laporan);
+// Return the table rows
+echo $output;
 
 // Close the database connection
 sqlsrv_close($conn);
