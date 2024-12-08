@@ -1,0 +1,80 @@
+/* Sama seperti CSS kode kedua */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+}
+
+#sidebar-wrapper {
+    width: 250px;
+    background-color: #003365;
+    color: #ffffff;
+    height: 100vh;
+    padding-top: 20px;
+}
+
+.sidebar-heading {
+    background-color: #3A6DA4;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.list-group-item {
+    background-color: #0f2c53;
+    color: white;
+    border: none;
+}
+
+.list-group-item:hover {
+    background-color: #245D9A;
+    color: black;
+}
+
+.active-item {
+    font-weight: bold;
+    background-color: #003365;
+    color: white;
+    border-left: 4px solid #f4b400;
+}
+
+.welcome-text {
+    font-weight: bold;
+    font-size: 1rem;
+    background-color: #003365;
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+    color: white;
+}
+
+.dashboard-container {
+    background-color: #f4f4f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.1);
+}
+
+footer {
+    background-color: #003365;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+.accordion-button {
+    background-color: #003365;
+    color: white;
+    font-weight: bold;
+    border: none;
+}
+
+.accordion-body {
+    background-color: #e9f3f8;
+    border-left: 3px solid #003365;
+    padding: 20px;
+}
