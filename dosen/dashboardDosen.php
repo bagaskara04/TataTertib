@@ -74,7 +74,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
                 <li class="header">MAIN NAVIGATION</li>
                 <li class="active"><a href="dashboardAdmin.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
                 <li><a href="dpaDosen.html"><i class="fa fa-users"></i> <span>Daftar DPA</span></a></li>
-                <li><a href="../logout.php"><i class="fa fa-exit"></i><span>Log Out</span></a></li>
+                <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
             </ul>
         </section>
     </aside>
