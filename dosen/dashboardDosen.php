@@ -1,48 +1,57 @@
 <?php
-session_start();
-if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
-    header("Location: loginPage.html");
+include 'getAdminName.php';
+// Periksa apakah user sudah login dan levelnya admin
+if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 1) {
+    header("Location: ../loginPage.html"); // Redirect ke halaman login
     exit();
 }
-
-include 'koneksi.php';  // Include your connection file
-
-// Ambil data kelas dan DPA dari database
-$query = "SELECT kelas.nama_kelas, dosen.nama AS nama_dpa 
-          FROM kelas 
-          JOIN dosen ON kelas.dpa_id = dosen.dosen_id";
-
-// Execute query using sqlsrv_query
-$result = sqlsrv_query($conn, $query);
-
-// Check if query executed successfully
-if (!$result) {
-    echo "Error in query execution.<br />";
-    die(print_r(sqlsrv_errors(), true));
-}
 ?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar DPA</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/AdminLTE.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/skins/_all-skins.min.css">
-    <link rel="stylesheet" href="styleDosen.css">
+    <title>Dashboard Dosen</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../fonts/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="../fonts/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
+    
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+      .main-header .navbar {
+          background-color: #115599 !important; /* Mengganti warna navbar */
+      }
+  </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
+<!-- Site wrapper -->
 <div class="wrapper">
+
     <header class="main-header">
-        <a href="dashboardDosen.php" class="logo">
-            <span class="logo-mini"><b>D</b>DS</span>
-            <span class="logo-lg">Dashboard <b>Dosen</b></span>
+        <a href="dashboardDosen.html" class="logo">
+            <span class="logo-mini"><b>S</b>TB</span>
+            <span class="logo-lg">SI<b>TATIB</b></span>
         </a>
         <nav class="navbar navbar-static-top">
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                 <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
             </a>
         </nav>
     </header>
@@ -51,45 +60,38 @@ if (!$result) {
         <section class="sidebar">
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="https://via.placeholder.com/160" class="img-circle" alt="User Image">
+                    <img src="../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <p>Dosen</p>
+                    <p>Atiqah</p>
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
             <ul class="sidebar-menu">
                 <li class="header">MAIN NAVIGATION</li>
-                <li><a href="dashboardDosen.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-                <li class="active"><a href="daftarDPA.php"><i class="fa fa-users"></i> <span>Daftar DPA</span></a></li>
+                <li class="active"><a href="dashboardAdmin.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                <li><a href="dataLaporan.html"><i class="fa fa-file-text-o"></i> <span>Data Laporan Pelanggaran</span></a></li>
+                <li><a href="../logout.php"><i class="fa fa-exit"></i><span>Log Out</span></a></li>
             </ul>
         </section>
     </aside>
 
+
     <div class="content-wrapper">
         <section class="content-header">
-            <h1>Daftar DPA</h1>
-            <small>Informasi kelas dan DPA</small>
+            <h1>Dashboard<small>Control panel</small></h1>
         </section>
+
         <section class="content">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Daftar Kelas dan DPA</h3>
+                    <h3 class="box-title">Welcome ...</h3>
                 </div>
                 <div class="box-body">
-                    <div class="dpa-container">
-                        <ul>
-                            <?php while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)): ?>
-                                <li>
-                                    <span class="class-name"><?= htmlspecialchars($row['nama_kelas']) ?></span>
-                                    <span class="dpa-name">DPA: <?= htmlspecialchars($row['nama_dpa']) ?></span>
-                                </li>
-                            <?php endwhile; ?>
-                        </ul>
-                    </div>
+                    <h1>Selamat Datang <?php echo htmlspecialchars($nama_admin);?></h1>
                 </div>
                 <div class="box-footer">
-                    <small>*Informasi ini diperbarui secara berkala.</small>
+                    Footer
                 </div>
             </div>
         </section>
@@ -97,14 +99,25 @@ if (!$result) {
 
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
-            <b><a href="#">Jurusan Teknologi Informasi</a></b>
+            <b><a href="">Jurusan Teknologi Informasi</a></b>
         </div>
-        <strong><a href="#">Politeknik Negeri Malang</a></strong>
+        <strong><a href="">Politeknik Negeri Malang</a></strong>
     </footer>
-</div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/js/app.min.js"></script>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 2.2.3 -->
+<script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="../plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="../dist/js/app.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="../dist/js/demo.js"></script>
 </body>
 </html>
