@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Commit transaksi jika semua berhasil
         sqlsrv_commit($conn);
-        echo "Mahasiswa dan akun login berhasil ditambahkan.";
+        echo "Mahasiswa berhasil ditambahkan.";
     } catch (Exception $e) {
         // Rollback transaksi jika terjadi kesalahan
         sqlsrv_rollback($conn);

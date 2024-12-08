@@ -1,3 +1,6 @@
+<?php
+include 'getAdminName.php';
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -51,20 +54,21 @@
         <section class="sidebar">
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                    <img src="../dist/img/profile3.png" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <p>Alexander Pierce</p>
+                <p><?php echo htmlspecialchars($nama_admin);?></p>
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
             <ul class="sidebar-menu">
                 <li class="header">MAIN NAVIGATION</li>
                 <li><a href="dashboardAdmin.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-                <li><a href="dataMahasiswa.html"><i class="fa fa-users"></i> <span>Data Mahasiswa</span></a></li>
-                <li class="active"><a href="dataDosen.html"><i class="fa fa-users"></i> <span>Data Dosen</span></a></li>
-                <li><a href="dataDPA.html"><i class="fa fa-file-text-o"></i> <span>Data DPA</span></a></li>
-                <li><a href="dataLaporan.html"><i class="fa fa-file-text-o"></i> <span>Data Laporan Pelanggaran</span></a></li>
+                <li><a href="dataMahasiswa.php"><i class="fa fa-users"></i> <span>Data Mahasiswa</span></a></li>
+                <li class="active"><a href="dataDosen.php"><i class="fa fa-users"></i> <span>Data Dosen</span></a></li>
+                <li><a href="dataDPA.php"><i class="fa fa-file-text-o"></i> <span>Data DPA</span></a></li>
+                <li><a href="dataLaporan.php"><i class="fa fa-file-text-o"></i> <span>Data Laporan Pelanggaran</span></a></li>
+                <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
             </ul>
         </section>
     </aside>
