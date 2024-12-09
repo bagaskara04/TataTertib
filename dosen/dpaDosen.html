@@ -144,15 +144,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
                         <div class="col-md-6">
                             <!-- DPA List -->
                             <div class="dpa-container">
-                                <ul>
-                                    <?php mysqli_data_seek($result, 0); // Reset result pointer ?>
-                                    <?php while ($row = mysqli_fetch_assoc($result)): ?>
-                                        <li>
-                                            <span class="class-name"><?= htmlspecialchars($row['nama_kelas']) ?></span>
-                                            <span class="dpa-name">DPA: <?= htmlspecialchars($row['nama_dpa']) ?></span>
-                                        </li>
-                                    <?php endwhile; ?>
-                                </ul>
                             </div>
                         </div>
                     </div>
