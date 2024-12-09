@@ -1,9 +1,16 @@
+<?php
+// daftarTatib.php
+
+// Mulai sesi jika diperlukan
+session_start();
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Dashboard Mahasiswa</title>
+    <title>Daftar Tata Tertib - Dashboard Mahasiswa</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
@@ -14,13 +21,60 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
-    
     <style>
         .main-header .navbar {
             background-color: #115599 !important;
         }
-        .logo-lg {
+
+        .table th, .table td {
+            text-align: center;
+        }
+
+        .table {
+            margin-top: 20px;
+        }
+
+        .box {
+            margin-top: 20px;
+        }
+
+        .card-box {
+            display: inline-block;
+            width: 30%;
+            margin: 15px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .card-box:hover {
+            background-color: #e2e6ea;
+        }
+
+        .card-box .title {
             font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .notification-count {
+            background-color: #ff5733;
+            color: white;
+            border-radius: 50%;
+            padding: 5px 10px;
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 12px;
+        }
+
+        .activity-timestamp {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
         }
     </style>
 </head>
@@ -57,12 +111,12 @@
             </div>
             <ul class="sidebar-menu">
                 <li class="header">MAIN NAVIGATION</li>
-                <li class="active"><a href="dashboardMahasiswa.php"><i class="fa fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
-                <li><a href="daftarTatib.php"><i class="fa fa-book"></i> <span>Daftar Tata Tertib</span></a></li>
-                <li><a href="pelanggaranSaya.php"><i class="fa fa-exclamation-triangle"></i> <span>Pelanggaran Saya</span></a></li>
-                <li><a href="buktiKompen.php"><i class="fa fa-upload"></i> <span>Upload Bukti Kompen</span></a></li>
-                <li><a href="ajukanBanding.php"><i class="fa fa-gavel"></i> <span>Ajukan Banding</span></a></li>
-                <li><a href="notifikasi.php"><i class="fa fa-bell"></i> <span>Notifikasi</span></a></li>
+                <li><a href="dashboardMahasiswa.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                <li class="active"><a href="daftarTatib.php"><i class="fa fa-calendar"></i> <span>Daftar Tata Tertib</span></a></li>
+                <li><a href="pelanggaranSaya.php"><i class="fa fa-user"></i> <span>Pelanggaran Saya</span></a></li>
+                <li><a href="buktiKompen.php"><i class="fa fa-book"></i> <span>Upload Bukti Kompen</span></a></li>
+                <li><a href="ajukanBanding.php"><i class="fa fa-user"></i> <span>Ajukan Banding</span></a></li>
+                <li><a href="notifikasi.php"><i class="fa fa-book"></i> <span>Notifikasi</span></a></li>
                 <li><a href="logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
             </ul>
         </section>
@@ -70,29 +124,45 @@
 
     <!-- Content Wrapper -->
     <div class="content-wrapper">
+        <!-- Header Konten -->
         <section class="content-header">
-            <h1>Dashboard</h1>
+            <h1>Daftar Tata Tertib</h1>
         </section>
 
+        <!-- Konten Utama -->
         <section class="content">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Selamat Datang, Alexander Pierce</h3>
+                    <h3 class="box-title">Tata Tertib Mahasiswa</h3>
                 </div>
-                <div class="box-body">
-                    <p>Anda terdaftar di jurusan <b>Teknik Informatika</b>, angkatan <b>2023</b>.</p>
-                    <p>Berikut adalah beberapa menu yang dapat Anda akses:</p>
+                <div class="box-body" style="background-color: #ffffff;"> <!-- Latar belakang putih di sini -->
+                    <!-- 3 Kotak yang bisa diklik -->
+                    <div class="card-box" onclick="window.location.href='pelanggaranSaya.php'">
+                        <div class="title">Total Pelanggaran</div>
+                        <div>Jumlah pelanggaran yang Anda lakukan: <strong>3</strong></div>
+                    </div>
+
+                    <div class="card-box" onclick="window.location.href='buktiKompen.php'">
+                        <div class="title">Upload Bukti</div>
+                        <div>Bukti kompensasi telah <strong>diupload</strong></div>
+                    </div>
+
+                    <div class="card-box" onclick="window.location.href='notifikasi.php'">
+                        <div class="title">Notifikasi</div>
+                        <div>
+                            Notifikasi Baru
+                        </div>
+                        <span class="notification-count">2</span> <!-- Notification count at the top-right corner -->
+                    </div>
+
+                    <!-- Aktivitas Terbaru -->
+                    <div class="activity-timestamp">
+                        <p><strong>Aktivitas Terbaru:</strong></p>
                         <ul>
-                            <li><b>Dashboard</b>: Halaman utama untuk melihat informasi umum dan status terkini.</li>
-                            <li><b>Daftar Tata Tertib</b>: Melihat dan mematuhi peraturan yang berlaku.</li>
-                            <li><b>Pelanggaran Saya</b>: Menyediakan informasi tentang pelanggaran yang Anda lakukan.</li>
-                            <li><b>Upload Bukti Kompen</b>: Mengunggah bukti kompensasi pelanggaran.</li>
-                            <li><b>Ajukan Banding</b>: Mengajukan permohonan banding terhadap keputusan pelanggaran.</li>
-                            <li><b>Notifikasi</b>: Melihat pemberitahuan terbaru terkait aktivitas Anda.</li>
+                            <li>Bukti Kompen diupload pada: <strong>5 Desember</strong></li>
+                            <li>Pelanggaran dilakukan pada: <strong>3 Desember</strong></li>
                         </ul>
-                </div>
-                <div class="box-footer">
-                    <p>Semangat belajar!</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -115,5 +185,6 @@
 <script src="../plugins/fastclick/fastclick.js"></script>
 <script src="../dist/js/app.min.js"></script>
 <script src="../dist/js/demo.js"></script>
+
 </body>
 </html>
