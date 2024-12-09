@@ -129,6 +129,7 @@ if (!$stmt) {
             <li class="header">Menu </li>
                 <li><a href="dashboardDosen.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
                 <li class="active"><a href="dpaDosen.php"><i class="fa fa-users"></i> <span>Daftar DPA</span></a></li>
+                <li><a href="dpaDosen.php"><i class="fa fa-building"></i> <span>DPA Kelas</span></a></li>
                 <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
             </ul>
         </section>
@@ -136,7 +137,7 @@ if (!$stmt) {
 
     <!-- Content Wrapper -->
     <div class="content-wrapper">
-        <section class="content">
+        <section class="content-header">
             <!-- Box -->
             <div class="box">
                 <div class="box-header with-border">

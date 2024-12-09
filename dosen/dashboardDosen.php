@@ -83,7 +83,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
 
     <div class="content-wrapper">
         <section class="content-header">
-            <h1>Dashboard<small>Control panel</small></h1>
+          
         </section>
 
         <section class="content">
@@ -95,7 +95,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
                     <h1>Selamat Datang <?php echo htmlspecialchars($nama_dosen);?></h1>
                 </div>
                 <div class="box-footer">
-                    Footer
+                    Tatib 
                 </div>
             </div>
         </section>
