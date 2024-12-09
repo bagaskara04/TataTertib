@@ -25,6 +25,57 @@ session_start();
         .main-header .navbar {
             background-color: #115599 !important;
         }
+
+        .content-wrapper {
+            padding: 20px;
+        }
+
+        .panel {
+            margin-bottom: 15px;
+        }
+
+        .panel-heading {
+            background-color: #f7f7f7;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .panel-body {
+            background-color: #ffffff;
+            padding: 15px;
+            border: 1px solid #ddd;
+            display: none; /* Initially hidden */
+        }
+
+        .panel .level {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .panel .description {
+            margin-top: 10px;
+        }
+
+        .panel .example {
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        .panel .icon {
+            float: right;
+            transition: transform 0.3s;
+        }
+
+        .panel.open .icon {
+            transform: rotate(90deg); /* Rotate the icon when open */
+        }
+        
+        .level-1 { border-left: 5px solid #ff5733; }
+        .level-2 { border-left: 5px solid #ffcc00; }
+        .level-3 { border-left: 5px solid #ffeb3b; }
+        .level-4 { border-left: 5px solid #fff3cd; }
+        .level-5 { border-left: 5px solid #d1e7dd; }
+
     </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -85,14 +136,65 @@ session_start();
                     <h3 class="box-title">Tata Tertib Mahasiswa</h3>
                 </div>
                 <div class="box-body" style="background-color: #ffffff;"> <!-- Latar belakang putih di sini -->
-                    <ul>
-                        <li>1. Tidak diperkenankan terlambat hadir di kelas.</li>
-                        <li>2. Menggunakan pakaian yang sopan dan rapi saat mengikuti kuliah.</li>
-                        <li>3. Menjaga ketertiban dan kebersihan ruang kelas.</li>
-                        <li>4. Tidak menggunakan ponsel selama perkuliahan.</li>
-                        <li>5. Menjaga sikap dan perilaku yang baik selama kegiatan akademik.</li>
-                        <!-- Tambahkan daftar tata tertib lainnya sesuai kebutuhan -->
-                    </ul>
+                
+                    <!-- Klasifikasi Tingkat Pelanggaran -->
+                    <h3>Klasifikasi Tingkat Pelanggaran</h3>
+                    
+                    <!-- Level 1 -->
+                    <div class="panel level-1" onclick="togglePanel(this)">
+                        <div class="panel-heading">
+                            Tingkat 1 - Sangat Berat 
+                            <span class="icon">&#62;</span>
+                        </div>
+                        <div class="panel-body">
+                            <p class="description">Pelanggaran yang sangat serius dan dapat dikenakan sanksi berat.</p>
+                        </div>
+                    </div>
+
+                    <!-- Level 2 -->
+                    <div class="panel level-2" onclick="togglePanel(this)">
+                        <div class="panel-heading">
+                            Tingkat 2 - Berat 
+                            <span class="icon">&#62;</span>
+                        </div>
+                        <div class="panel-body">
+                            <p class="description">Pelanggaran yang mengganggu proses pembelajaran secara signifikan dan dapat mempengaruhi hasil akademik.</p>
+                        </div>
+                    </div>
+
+                    <!-- Level 3 -->
+                    <div class="panel level-3" onclick="togglePanel(this)">
+                        <div class="panel-heading">
+                            Tingkat 3 - Menengah 
+                            <span class="icon">&#62;</span>
+                        </div>
+                        <div class="panel-body">
+                            <p class="description">Pelanggaran yang menyebabkan gangguan yang cukup besar dalam kegiatan akademik.</p>
+                        </div>
+                    </div>
+
+                    <!-- Level 4 -->
+                    <div class="panel level-4" onclick="togglePanel(this)">
+                        <div class="panel-heading">
+                            Tingkat 4 - Sedang 
+                            <span class="icon">&#62;</span>
+                        </div>
+                        <div class="panel-body">
+                            <p class="description">Pelanggaran yang mengganggu kegiatan akademik namun masih bisa ditoleransi.</p>
+                        </div>
+                    </div>
+
+                    <!-- Level 5 -->
+                    <div class="panel level-5" onclick="togglePanel(this)">
+                        <div class="panel-heading">
+                            Tingkat 5 - Ringan 
+                            <span class="icon">&#62;</span>
+                        </div>
+                        <div class="panel-body">
+                            <p class="description">Pelanggaran yang tidak terlalu mengganggu kegiatan akademik.</p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
@@ -115,5 +217,33 @@ session_start();
 <script src="../plugins/fastclick/fastclick.js"></script>
 <script src="../dist/js/app.min.js"></script>
 <script src="../dist/js/demo.js"></script>
+
+<!-- Custom JavaScript for Toggle Effect -->
+<script>
+    function togglePanel(panel) {
+        // Close all panels first
+        var panels = document.querySelectorAll('.panel');
+        panels.forEach(function (p) {
+            if (p !== panel) {
+                p.classList.remove('open');
+                p.querySelector('.panel-body').style.display = 'none';
+                p.querySelector('.panel-body').style.display = 'none';
+            }
+        });
+
+        // Toggle the selected panel
+        var panelBody = panel.querySelector('.panel-body');
+        var icon = panel.querySelector('.icon');
+
+        if (panelBody.style.display === 'none' || panelBody.style.display === '') {
+            panelBody.style.display = 'block';
+            panel.classList.add('open');
+        } else {
+            panelBody.style.display = 'none';
+            panel.classList.remove('open');
+        }
+    }
+</script>
+
 </body>
 </html>
