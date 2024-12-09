@@ -5,6 +5,30 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
     header("Location: ../loginPage.html"); // Redirect ke halaman login
     exit();
 }
+
+// Koneksi database
+include('../koneksi.php');  // Pastikan file koneksi ke database sudah benar
+
+// Query untuk mengambil data kelas dan DPA terkait
+$query = "
+    SELECT 
+        dpa.dpa_id,
+        dosen.nama AS nama_dpa,
+        STRING_AGG(kelas.nama_kelas, ', ') AS daftar_kelas
+    FROM dpa
+    JOIN dosen ON dpa.nip = dosen.nip
+    LEFT JOIN kelas ON dpa.dpa_id = kelas.dpa_id
+    GROUP BY dpa.dpa_id, dosen.nama
+    ORDER BY daftar_kelas asc
+";  
+
+// Eksekusi query
+$stmt = sqlsrv_query($conn, $query);
+
+// Cek apakah query berhasil dijalankan
+if (!$stmt) {
+    die("Query gagal dijalankan: " . print_r(sqlsrv_errors(), true));
+}
 ?>
 
 <!DOCTYPE html>
@@ -23,16 +47,14 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
             background-color: #115599 !important;
         }
 
-        /* Menambahkan CSS untuk memperbesar judul */
         .page-title {
-            font-size: 40px !important; /* Ukuran font lebih besar */
+            font-size: 40px !important;
             font-weight: bold;
-            color: #115599; /* Warna teks */
-            text-align: left; /* Rata tengah */
-            margin-bottom: 30px; /* Memberikan jarak bawah */
+            color: #115599;
+            text-align: left;
+            margin-bottom: 30px;
         }
 
-        /* Custom Styles lainnya */
         .content-wrapper {
             padding: 30px;
         }
@@ -95,19 +117,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
                     <img src="../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <!-- Menampilkan nama dosen yang diambil dari database -->
                     <p><?php echo htmlspecialchars($nama_dosen); ?></p>
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
             <ul class="sidebar-menu">
                 <li class="header">MAIN NAVIGATION</li>
-<<<<<<< HEAD
-=======
-                <li class="active"><a href="dashboardDosen.html"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-                <li><a href="dpaDosen.html"><i class="fa fa-users"></i> <span>Daftar DPA</span></a></li>
+                <li><a href="dashboardDosen.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                <li class="active"><a href="dpaDosen.php"><i class="fa fa-users"></i> <span>Daftar DPA</span></a></li>
                 <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
->>>>>>> 81aae34ed0716a06ffba06c2088eae7145e7711b
             </ul>
         </section>
     </aside>    
@@ -132,19 +150,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                                    <?php while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)): ?>
                                         <tr>
-                                            <td><?= htmlspecialchars($row['nama_kelas']) ?></td>
+                                        <td><?= htmlspecialchars($row['daftar_kelas'] ?? 'Tidak ada kelas') ?></td>
+
                                             <td><?= htmlspecialchars($row['nama_dpa']) ?></td>
                                         </tr>
                                     <?php endwhile; ?>
                                 </tbody>
                             </table>
-                        </div>
-                        <div class="col-md-6">
-                            <!-- DPA List -->
-                            <div class="dpa-container">
-                            </div>
                         </div>
                     </div>
                 </div>
