@@ -55,6 +55,10 @@ if (!$stmt) {
             margin-bottom: 30px;
         }
 
+        .sidebar-menu > li > a {
+            font-weight: bold; /* Ketebalan teks menu */
+        }
+        
         .content-wrapper {
             padding: 30px;
         }
@@ -122,7 +126,7 @@ if (!$stmt) {
                 </div>
             </div>
             <ul class="sidebar-menu">
-                <li class="header">MAIN NAVIGATION</li>
+            <li class="header">Menu </li>
                 <li><a href="dashboardDosen.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
                 <li class="active"><a href="dpaDosen.php"><i class="fa fa-users"></i> <span>Daftar DPA</span></a></li>
                 <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>

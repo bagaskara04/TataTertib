@@ -14,31 +14,32 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
 <html>
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Dashboard Dosen</title>
-    <!-- Tell the browser to be responsive to screen width -->
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <!-- Bootstrap 3.3.6 -->
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="../fonts/font-awesome.min.css">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="../fonts/ionicons.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
-    <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
-    
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/skins/_all-skins.min.css">
     <style>
-      .main-header .navbar {
-          background-color: #115599 !important; /* Mengganti warna navbar */
-      }
-  </style>
+        .main-header .navbar {
+            background-color: #115599 !important;
+        }
+        .page-title {
+            font-size: 40px;
+            font-weight: bold;
+            color: #115599;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .box-body h1 {
+        font-weight: bold; /* Membuat teks di dalam box-body menjadi tebal */
+        }
+
+        .sidebar-menu > li > a {
+            font-weight: bold; /* Ketebalan teks menu */
+        }
+
+    </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
@@ -71,7 +72,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
                 </div>
             </div>
             <ul class="sidebar-menu">
-                <li class="header">MAIN NAVIGATION</li>
+                <li class="header"> Menu </li>
                 <li class="active"><a href="dashboardDosen.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
                 <li><a href="dpaDosen.php"><i class="fa fa-users"></i> <span>Daftar DPA</span></a></li>
                 <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
