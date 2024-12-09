@@ -55,8 +55,6 @@ session_start();
                 <li><a href="dashboardMahasiswa.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
                 <li><a href="daftarTatib.php"><i class="fa fa-calendar"></i> <span>Daftar Tata Tertib</span></a></li>
                 <li class="active"><a href="pelanggaranSaya.php"><i class="fa fa-user"></i> <span>Pelanggaran Saya</span></a></li>
-                <li><a href="buktiKompen.php"><i class="fa fa-book"></i> <span>Upload Bukti Kompen</span></a></li>
-                <li><a href="ajukanBanding.php"><i class="fa fa-user"></i> <span>Ajukan Banding</span></a></li>
                 <li><a href="notifikasi.php"><i class="fa fa-book"></i> <span>Notifikasi</span></a></li>
                 <li><a href="logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
             </ul>
@@ -74,11 +72,65 @@ session_start();
                     <h3 class="box-title">Daftar Pelanggaran yang Anda Lakukan</h3>
                 </div>
                 <div class="box-body" style="background-color: #ffffff;">
-                    <ul>
-                        <li>Pelanggaran 1: Tidak mengikuti kuliah tepat waktu.</li>
-                        <li>Pelanggaran 2: Menggunakan ponsel saat kuliah.</li>
-                        <li>Pelanggaran 3: Tidak mengenakan pakaian yang sesuai.</li>
-                    </ul>
+                    <?php if (isset($statusMessage)): ?>
+                        <div class="alert alert-info"><?= $statusMessage ?></div>
+                    <?php endif; ?>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Deskripsi Pelanggaran</th>
+                                <th>Tanggal</th>
+                                <th>Status</th>
+                                <th>Ajukan Banding</th>
+                                <th>Upload Bukti Kompen</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if ($result->num_rows > 0) {
+                                $no = 1;
+                                while ($row = $result->fetch_assoc()) {
+                                    $status = "Kosong";
+                                    if ($row['status_band'] == 'proses') {
+                                        $status = "Banding Sedang Diproses";
+                                    } elseif ($row['status_band'] == 'ditolak') {
+                                        $status = "Banding Ditolak";
+                                    } elseif ($row['status_band'] == 'disetujui') {
+                                        $status = "Banding Disetujui";
+                                    } elseif ($row['status_kompen'] == 'selesai') {
+                                        $status = "Selesai";
+                                    }
+
+                                    echo "
+                                        <tr>
+                                            <td>{$no}</td>
+                                            <td>{$row['deskripsi']}</td>
+                                            <td>{$row['tanggal']}</td>
+                                            <td id='status-{$row['id']}'>{$status}</td>
+                                            <td>
+                                                <form action='ajukanBanding.php' method='GET' style='display:inline;'>
+                                                    <input type='hidden' name='idPelanggaran' value='{$row['id']}'>
+                                                    <button type='submit' class='btn btn-primary btn-sm'>Ajukan Banding</button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form action='' method='POST' enctype='multipart/form-data' style='display:inline;'>
+                                                    <input type='hidden' name='idPelanggaran' value='{$row['id']}'>
+                                                    <input type='file' name='bukti' required>
+                                                    <button type='submit' class='btn btn-success btn-sm'>Upload</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    ";
+                                    $no++;
+                                }
+                            } else {
+                                echo "<tr><td colspan='6'>Tidak ada data pelanggaran.</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
