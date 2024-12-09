@@ -5,13 +5,13 @@ include 'koneksi.php'; // Menghubungkan dengan file koneksi yang berisi kode di 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Mengambil data dari form
     $username = $_POST['username'];  
-    $password = $_POST['password'];  // Tidak melakukan enkripsi password
+    $password = $_POST['password'];  // Password dari form
 
-    // Query untuk memeriksa username dan password
-    $sql = "SELECT * FROM users WHERE username = ? AND password = ?";  // Sesuaikan dengan nama tabel yang benar
+    // Query untuk memeriksa username
+    $sql = "SELECT * FROM users WHERE username = ?";  // Sesuaikan dengan nama tabel yang benar
     
     // Menyiapkan query
-    $params = array($username, $password);
+    $params = array($username);
     $stmt = sqlsrv_query($conn, $sql, $params);
 
     if ($stmt === false) {
@@ -22,29 +22,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Mengambil data user
         $user = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
 
-        // Menyimpan data user ke dalam session
-        $_SESSION['user_id'] = $user['user_id'];
-        $_SESSION['username'] = $user['username'];
-        $_SESSION['level'] = $user['level'];
+        // Verifikasi password yang di-hash
+        if (password_verify($password, $user['password'])) {
+            // Menyimpan data user ke dalam session
+            $_SESSION['user_id'] = $user['user_id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['level'] = $user['level'];
 
-        // Redirect berdasarkan level user
-        switch ($user['level']) {
-            case 1: // Admin
-                header("Location: admin/dashboardAdmin.php");
-                break;
-            case 2: // Dosen
-                header("Location: dosen/dashboardDosen.php");
-                break;
-            case 3: // Mahasiswa
-                header("Location: mahasiswa/dashboardMahasiswa.php");
-                break;
-            default:
-                echo "<script>alert('Level user tidak valid!'); window.location.href = 'loginPage.html';</script>";
-                break;
+            // Redirect berdasarkan level user
+            switch ($user['level']) {
+                case 1: // Admin
+                    header("Location: admin/dashboardAdmin.php");
+                    break;
+                case 2: // Dosen
+                    header("Location: dosen/dashboardDosen.php");
+                    break;
+                case 3: // Mahasiswa
+                    header("Location: mahasiswa/dashboardMahasiswa.php");
+                    break;
+                default:
+                    echo "<script>alert('Level user tidak valid!'); window.location.href = 'loginPage.html';</script>";
+                    break;
+            }
+        } else {
+            // Jika password salah, kirimkan alert dan arahkan ke halaman login
+            echo "<script>alert('Username atau password salah!'); window.location.href = 'loginPage.html';</script>";
         }
     } else {
-        // Jika username atau password salah
-        echo "<script>alert('Username atau password salah!'); window.location.href = 'loginPage.html';</script>";
+        // Jika username tidak ditemukan, kirimkan alert dan arahkan ke halaman login
+        echo "<script>alert('Username tidak ditemukan!'); window.location.href = 'loginPage.html';</script>";
     }
 }
 ?>
