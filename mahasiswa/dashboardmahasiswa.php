@@ -140,11 +140,6 @@ session_start();
                         <div>Jumlah pelanggaran yang Anda lakukan: <strong>3</strong></div>
                     </div>
 
-                    <div class="card-box" onclick="window.location.href='buktiKompen.php'">
-                        <div class="title">Upload Bukti</div>
-                        <div>Bukti kompensasi telah <strong>diupload</strong></div>
-                    </div>
-
                     <div class="card-box" onclick="window.location.href='notifikasi.php'">
                         <div class="title">Notifikasi</div>
                         <div>

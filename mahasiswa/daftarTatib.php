@@ -1,8 +1,23 @@
 <?php
 // daftarTatib.php
 
-// Mulai sesi jika diperlukan
-session_start();
+// Koneksi database
+require_once '../koneksi.php'; // Pastikan file koneksi database sudah benar
+
+// Query untuk mengambil data pelanggaran
+$query = "
+    SELECT tingkat, pelanggaran 
+    FROM pelanggaran 
+    ORDER BY tingkat ASC
+";  
+
+// Eksekusi query
+$stmt = sqlsrv_query($conn, $query);
+
+// Cek apakah query berhasil dijalankan
+if (!$stmt) {
+    die("Query gagal dijalankan: " . print_r(sqlsrv_errors(), true));
+}
 ?>
 
 <!DOCTYPE html>
@@ -47,20 +62,6 @@ session_start();
             display: none; /* Initially hidden */
         }
 
-        .panel .level {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .panel .description {
-            margin-top: 10px;
-        }
-
-        .panel .example {
-            font-style: italic;
-            margin-top: 5px;
-        }
-
         .panel .icon {
             float: right;
             transition: transform 0.3s;
@@ -69,13 +70,12 @@ session_start();
         .panel.open .icon {
             transform: rotate(90deg); /* Rotate the icon when open */
         }
-        
+
         .level-1 { border-left: 5px solid #ff5733; }
         .level-2 { border-left: 5px solid #ffcc00; }
         .level-3 { border-left: 5px solid #ffeb3b; }
         .level-4 { border-left: 5px solid #fff3cd; }
         .level-5 { border-left: 5px solid #d1e7dd; }
-
     </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -133,66 +133,43 @@ session_start();
                 <div class="box-header with-border">
                     <h3 class="box-title">Tata Tertib Mahasiswa</h3>
                 </div>
-                <div class="box-body" style="background-color: #ffffff;"> <!-- Latar belakang putih di sini -->
-                
+                <div class="box-body" style="background-color: #ffffff;">
                     <!-- Klasifikasi Tingkat Pelanggaran -->
                     <h3>Klasifikasi Tingkat Pelanggaran</h3>
                     
-                    <!-- Level 1 -->
-                    <div class="panel level-1" onclick="togglePanel(this)">
-                        <div class="panel-heading">
-                            Tingkat 1 - Sangat Berat 
-                            <span class="icon">&#62;</span>
-                        </div>
-                        <div class="panel-body">
-                            <p class="description">Pelanggaran yang sangat serius dan dapat dikenakan sanksi berat.</p>
-                        </div>
-                    </div>
+                    <?php
+                    // Menampilkan data dari database berdasarkan tingkat
+                    $current_tingkat = null;
 
-                    <!-- Level 2 -->
-                    <div class="panel level-2" onclick="togglePanel(this)">
-                        <div class="panel-heading">
-                            Tingkat 2 - Berat 
-                            <span class="icon">&#62;</span>
-                        </div>
-                        <div class="panel-body">
-                            <p class="description">Pelanggaran yang mengganggu proses pembelajaran secara signifikan dan dapat mempengaruhi hasil akademik.</p>
-                        </div>
-                    </div>
+                    while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                        // Jika tingkat berubah, buat header baru
+                        if ($current_tingkat !== $row['tingkat']) {
+                            // Tutup panel sebelumnya jika ada
+                            if ($current_tingkat !== null) {
+                                echo "</div></div>";
+                            }
 
-                    <!-- Level 3 -->
-                    <div class="panel level-3" onclick="togglePanel(this)">
-                        <div class="panel-heading">
-                            Tingkat 3 - Menengah 
-                            <span class="icon">&#62;</span>
-                        </div>
-                        <div class="panel-body">
-                            <p class="description">Pelanggaran yang menyebabkan gangguan yang cukup besar dalam kegiatan akademik.</p>
-                        </div>
-                    </div>
+                            // Perbarui tingkat saat ini dan tambahkan panel baru
+                            $current_tingkat = $row['tingkat'];
+                            echo "
+                            <div class='panel level-$current_tingkat' onclick='togglePanel(this)'>
+                                <div class='panel-heading'>
+                                    Tingkat $current_tingkat
+                                    <span class='icon'>&#62;</span>
+                                </div>
+                                <div class='panel-body' style='display: none;'>
+                            ";
+                        }
 
-                    <!-- Level 4 -->
-                    <div class="panel level-4" onclick="togglePanel(this)">
-                        <div class="panel-heading">
-                            Tingkat 4 - Sedang 
-                            <span class="icon">&#62;</span>
-                        </div>
-                        <div class="panel-body">
-                            <p class="description">Pelanggaran yang mengganggu kegiatan akademik namun masih bisa ditoleransi.</p>
-                        </div>
-                    </div>
+                        // Tambahkan data tata tertib dalam panel ini
+                        echo "<p>{$row['pelanggaran']}</p>";
+                    }
 
-                    <!-- Level 5 -->
-                    <div class="panel level-5" onclick="togglePanel(this)">
-                        <div class="panel-heading">
-                            Tingkat 5 - Ringan 
-                            <span class="icon">&#62;</span>
-                        </div>
-                        <div class="panel-body">
-                            <p class="description">Pelanggaran yang tidak terlalu mengganggu kegiatan akademik.</p>
-                        </div>
-                    </div>
-
+                    // Tutup panel terakhir
+                    if ($current_tingkat !== null) {
+                        echo "</div></div>";
+                    }
+                    ?>
                 </div>
             </div>
         </section>
@@ -224,7 +201,6 @@ session_start();
         panels.forEach(function (p) {
             if (p !== panel) {
                 p.classList.remove('open');
-                p.querySelector('.panel-body').style.display = 'none';
                 p.querySelector('.panel-body').style.display = 'none';
             }
         });
