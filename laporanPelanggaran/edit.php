@@ -85,13 +85,13 @@ $pelanggaran_list = getAllPelanggaran($conn);
     <div class="content-wrapper">  
         <div class="content-header">  
             <div class="container-fluid">  
-                <h1 class="m-0">Edit Pengaduan</h1>  
+                
             </div>  
         </div>  
 
         <div class="content">  
             <div class="container-fluid">  
-                <h2>Form Edit Pengaduan</h2>  
+                <h2>Form Edit Pengaduan</h2><br><br>  
                 <?php if (isset($_SESSION['message'])): ?>  
                     <div class="alert alert-<?= $_SESSION['message_type']; ?>">  
                         <?= $_SESSION['message']; ?>  
