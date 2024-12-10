@@ -1,4 +1,4 @@
-<?php  
+ <?php  
 session_start();  
 require_once '../koneksi.php';  
 
@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['message_type'] = "danger";  
     }  
 
-    header("Location: coba.php");  
+    header("Location: formPelanggaran.php");  
     exit();  
 }
-?>
+?>    

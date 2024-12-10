@@ -115,7 +115,7 @@ session_start();
                 <li class="active"><a href="daftarTatib.php"><i class="fa fa-calendar"></i> <span>Daftar Tata Tertib</span></a></li>
                 <li><a href="pelanggaranSaya.php"><i class="fa fa-user"></i> <span>Pelanggaran Saya</span></a></li>
                 <li><a href="notifikasi.php"><i class="fa fa-book"></i> <span>Notifikasi</span></a></li>
-                <li><a href="logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
+                <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
             </ul>
         </section>
     </aside>
@@ -138,11 +138,6 @@ session_start();
                     <div class="card-box" onclick="window.location.href='pelanggaranSaya.php'">
                         <div class="title">Total Pelanggaran</div>
                         <div>Jumlah pelanggaran yang Anda lakukan: <strong>3</strong></div>
-                    </div>
-
-                    <div class="card-box" onclick="window.location.href='buktiKompen.php'">
-                        <div class="title">Upload Bukti</div>
-                        <div>Bukti kompensasi telah <strong>diupload</strong></div>
                     </div>
 
                     <div class="card-box" onclick="window.location.href='notifikasi.php'">

@@ -1,17 +1,16 @@
 <?php
 session_start();
-include 'koneksi.php'; // Memasukkan file koneksi
+include 'koneksi.php';
 
 class Login {
     private $conn;
 
-    // Konstruktor untuk menerima koneksi global
     public function __construct() {
-        global $conn; // Mengakses koneksi global
+        global $conn; 
         $this->conn = $conn;
     }
 
-    // Metode untuk memeriksa autentikasi
+    // autentikasi
     public function authenticate($username, $password) {
         $sql = "SELECT * FROM users WHERE username = ? AND password = ?";
         $params = array($username, $password);
@@ -43,12 +42,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Membuat instance Login dan memeriksa autentikasi
+    // instansiasi Login
     $login = new Login();
     $level = $login->authenticate($username, $password);
 
     if ($level !== false) {
-        // Redirect berdasarkan level user
         switch ($level) {
             case 1: // Admin
                 header("Location: admin/dashboardAdmin.php");

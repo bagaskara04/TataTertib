@@ -1,14 +1,14 @@
 <?php
 
 class Database {
-    private static $instance = null; // Menyimpan instance tunggal
+    private static $instance = null; 
     private $conn;
     private $host = "localhost";
     private $database = "tatib";
-    private $username = ""; // Isi dengan username database
-    private $password = ""; // Isi dengan password database
+    private $username = "";
+    private $password = ""; 
 
-    // Private constructor untuk mencegah instansiasi langsung
+
     private function __construct() {
         $connectionInfo = array(
             "Database" => $this->database,
@@ -31,7 +31,7 @@ class Database {
         return self::$instance;
     }
 
-    // Metode untuk mendapatkan koneksi
+    // koneksi ke seluruh file
     public function getConnection() {
         return $this->conn;
     }

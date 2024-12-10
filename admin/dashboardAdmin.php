@@ -1,8 +1,8 @@
 <?php
 include 'getAdminName.php';
-// Periksa apakah user sudah login dan levelnya admin
+
 if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 1) {
-    header("Location: ../loginPage.html"); // Redirect ke halaman login
+    header("Location: ../loginPage.html");
     exit();
 }
 ?>
@@ -34,7 +34,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 1) {
 <div class="wrapper">
 
     <header class="main-header">
-        <a href="dashboardAdmin.html" class="logo">
+        <a href="dashboardAdmin.php" class="logo">
             <span class="logo-mini"><b>S</b>TB</span>
             <span class="logo-lg">SI<b>TATIB</b></span>
         </a>
@@ -73,7 +73,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 1) {
 
     <div class="content-wrapper">
         <section class="content-header">
-            <h1>Dashboard<small>Control panel</small></h1>
+            <h1>Dashboard Admin</h1>
         </section>
 
         <section class="content">
@@ -85,7 +85,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 1) {
                     <h1>Selamat Datang <?php echo htmlspecialchars($nama_admin);?></h1>
                 </div>
                 <div class="box-footer">
-                    Footer
+                    JTI Polinema
                 </div>
             </div>
         </section>
@@ -93,9 +93,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 1) {
 
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
-            <b><a href="">Jurusan Teknologi Informasi</a></b>
+            <b><a href="https://jti.polinema.ac.id/" target="_blank">Jurusan Teknologi Informasi</a></b>
         </div>
-        <strong><a href="">Politeknik Negeri Malang</a></strong>
+        <strong><a href="https://polinema.ac.id" target="_blank">Politeknik Negeri Malang</a></strong>
     </footer>
 
 </div>

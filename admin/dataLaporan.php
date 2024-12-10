@@ -21,12 +21,11 @@ include 'getAdminName.php';
     
     <style>
         .main-header .navbar {
-            background-color: #115599 !important; /* Mengganti warna navbar */
+            background-color: #115599 !important;
         }
     </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
-<!-- Site wrapper -->
 <div class="wrapper">
 
     <header class="main-header">
@@ -83,7 +82,6 @@ include 'getAdminName.php';
                             <input type="text" id="searchLaporan" class="form-control" placeholder="Search">
                         </div>
                     </div>
-                    <!-- Tabel Data Laporan Pelanggaran -->
                     <table id="laporanTable" class="table table-bordered table-striped">
                         <thead>
                             <tr>
@@ -101,7 +99,6 @@ include 'getAdminName.php';
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Data Laporan Pelanggaran Akan Ditampilkan Di Sini -->
                         </tbody>
                     </table>
                 </div>
@@ -111,15 +108,14 @@ include 'getAdminName.php';
 
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
-            <b><a href="">Jurusan Teknologi Informasi</a></b>
+            <b><a href="https://jti.polinema.ac.id/" target="_blank">Jurusan Teknologi Informasi</a></b>
         </div>
-        <strong><a href="">Politeknik Negeri Malang</a></strong>
+        <strong><a href="https://polinema.ac.id" target="_blank">Politeknik Negeri Malang</a></strong>
     </footer>
 
 </div>
-<!-- ./wrapper -->
 
-<!-- Modal Detail Laporan -->
+
 <div id="detailLaporanModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -214,10 +210,10 @@ include 'getAdminName.php';
 <script src="../plugins/datatables/dataTables.bootstrap.min.js"></script>
 <script>
     $(document).ready(function () {
-        // Fungsi untuk mengambil data laporan pelanggaran dan mengisi tabel
+
         function fetchLaporan() {
     $.ajax({
-        url: 'getLaporan.php', // Ganti dengan URL file PHP yang sesuai
+        url: 'getLaporan.php', 
         method: 'GET',
         success: function (data) {
             // Menampilkan data laporan pelanggaran ke dalam tabel
@@ -230,33 +226,32 @@ include 'getAdminName.php';
     });
 }
 
-// Search functionality
+// Search 
 $('#searchLaporan').on('keyup', function () {
-    var value = $(this).val().toLowerCase(); // Ambil input search dan ubah jadi lowercase
+    var value = $(this).val().toLowerCase();
     $('#laporanTable tbody tr').filter(function () {
-        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1); // Filter rows berdasarkan query
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1); 
     });
 });
 
-// Panggil fungsi fetchLaporan saat halaman dimuat
+
 fetchLaporan();
 
 
-        // Detail button event handler
 $(document).on('click', '.detailBtn', function () {
     var laporanId = $(this).data('id');
     // Ambil data detail laporan berdasarkan laporanId
     $.ajax({
-        url: 'getDetailLaporan.php', // Ganti dengan URL file PHP yang sesuai
+        url: 'getDetailLaporan.php',
         method: 'GET',
         data: { id: laporanId },
         success: function (data) {
             var detail = JSON.parse(data);
-            // Periksa apakah data detail ditemukan
+
             if (detail.error) {
                 alert(detail.error);
             } else {
-                // Update modal dengan data yang diterima
+                // Update modal
                 $('#dosenNama').val(detail.dosen_nama);
                 $('#mahasiswaNama').val(detail.mahasiswa_nama);
                 $('#pelanggaran').val(detail.pelanggaran);
@@ -296,20 +291,20 @@ $('#saveEditLaporan').on('click', function () {
     var newStatus = $('#editStatusPengaduan').val();
 
     $.ajax({
-        url: 'updateLaporan.php', // URL untuk update
+        url: 'updateLaporan.php',
         method: 'POST',
-        dataType: 'json', // Pastikan menerima JSON
+        dataType: 'json',
         data: {
             id: laporanId,
             status: newStatus
         },
         success: function (response) {
             if (response.success) {
-                alert(response.message); // Tampilkan pesan sukses
+                alert(response.message);
                 $('#editLaporanModal').modal('hide');
-                fetchLaporan(); // Refresh tabel
+                fetchLaporan();
             } else {
-                alert('Gagal: ' + response.message); // Tampilkan pesan error
+                alert('Gagal: ' + response.message);
             }
         },
         error: function (xhr, status, error) {

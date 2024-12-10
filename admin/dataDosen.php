@@ -118,9 +118,9 @@ include 'getAdminName.php';
 
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
-            <b><a href="">Jurusan Teknologi Informasi</a></b>
+            <b><a href="https://jti.polinema.ac.id/" target="_blank">Jurusan Teknologi Informasi</a></b>
         </div>
-        <strong><a href="">Politeknik Negeri Malang</a></strong>
+        <strong><a href="https://polinema.ac.id" target="_blank">Politeknik Negeri Malang</a></strong>
     </footer>
 
 </div>
@@ -244,10 +244,10 @@ include 'getAdminName.php';
 <script src="../plugins/datatables/dataTables.bootstrap.min.js"></script>
 <script>
     $(document).ready(function () {
-        // Fungsi untuk mengambil data dosen dan mengisi tabel
+        // Fungsi untuk mengambil data dosen
         function fetchDosen() {
             $.ajax({
-                url: 'get_dosen.php', // Ganti dengan URL file PHP yang sesuai
+                url: 'get_dosen.php',
                 method: 'GET',
                 success: function (data) {
                     // Menampilkan data dosen ke dalam tabel
@@ -260,32 +260,32 @@ include 'getAdminName.php';
             });
         }
 
-        // Search functionality
+        // Search
         $('#searchDosen').on('keyup', function () {
-                var value = $(this).val().toLowerCase(); // Ambil input search dan ubah jadi lowercase
+                var value = $(this).val().toLowerCase(); 
                 $('#dosenTable tbody tr').filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1); // Filter rows berdasarkan query
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
                 });
             });
     
-        // Panggil fungsi fetchDosen saat halaman dimuat
+        
         fetchDosen();
     
         // Fungsi untuk menghapus Dosen
         $(document).on('click', '.deleteDosen', function () {
-            const nip = $(this).data('nip'); // Mendapatkan NIP dosen
+            const nip = $(this).data('nip');
             if (confirm('Yakin ingin menghapus data dosen dengan NIP ' + nip + '?')) { // Konfirmasi penghapusan
                 $.ajax({
-                    url: 'delete_dosen.php', // Endpoint untuk menghapus dosen
+                    url: 'delete_dosen.php',
                     method: 'POST',
-                    data: { nip: nip }, // Kirim data NIP untuk dihapus
+                    data: { nip: nip },
                     success: function (response) {
-                        alert(response); // Tampilkan pesan sukses
-                        fetchDosen(); // Refresh data dosen setelah penghapusan
+                        alert(response); 
+                        fetchDosen(); 
                     },
                     error: function (xhr, status, error) {
-                        console.error(xhr.responseText); // Tampilkan error di console
-                        alert("Terjadi kesalahan saat menghapus data dosen."); // Tampilkan pesan error
+                        console.error(xhr.responseText); 
+                        alert("Terjadi kesalahan saat menghapus data dosen."); 
                     }
                 });
             }
@@ -293,17 +293,17 @@ include 'getAdminName.php';
     
         // Fungsi untuk menambahkan Dosen
         $('#addDosenForm').on('submit', function (e) {
-            e.preventDefault(); // Mencegah form untuk reload halaman
+            e.preventDefault();
     
             $.ajax({
-                url: 'add_dosen.php', // Endpoint PHP untuk menambahkan data dosen
+                url: 'add_dosen.php',
                 method: 'POST',
                 data: $(this).serialize(),
                 success: function (response) {
-                    alert(response); // Tampilkan pesan sukses
-                    $('#addDosenModal').modal('hide'); // Tutup modal
-                    $('#addDosenForm')[0].reset(); // Reset form
-                    fetchDosen(); // Segarkan data dosen setelah penambahan
+                    alert(response);
+                    $('#addDosenModal').modal('hide');
+                    $('#addDosenForm')[0].reset();
+                    fetchDosen();
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -311,15 +311,15 @@ include 'getAdminName.php';
                 }
             });
         });
-            // Fungsi untuk membuka modal editDosen dengan data yang sudah ada
+            // Fungsi untuk membuka editDosen
             $(document).on('click', '.editDosen', function () {
-            const nip = $(this).data('nip'); // Ambil NIP dari tombol edit
+            const nip = $(this).data('nip');
             $.ajax({
-                url: 'getdosennip.php', // Endpoint untuk mengambil data dosen berdasarkan NIP
+                url: 'getdosennip.php',
                 method: 'GET',
                 data: { nip: nip },
                 success: function (data) {
-                    const dosen = JSON.parse(data); // Parse data menjadi JSON
+                    const dosen = JSON.parse(data);
                     $('#edit_nip').val(dosen.nip);
                     $('#edit_nama').val(dosen.nama);
                     $('#edit_ttl').val(dosen.TTL);
@@ -337,18 +337,18 @@ include 'getAdminName.php';
             });
         });
 
-        // Fungsi untuk menyimpan perubahan data dosen
+        // Fungsi untuk simpan edit
         $('#editDosenForm').on('submit', function (e) {
-            e.preventDefault(); // Mencegah reload halaman
+            e.preventDefault();
 
             $.ajax({
-                url: 'updateDosen.php', // Endpoint PHP untuk memperbarui data dosen
+                url: 'updateDosen.php', 
                 method: 'POST',
                 data: $(this).serialize(),
                 success: function (response) {
-                    alert(response); // Tampilkan pesan sukses
-                    $('#editDosenModal').modal('hide'); // Tutup modal
-                    fetchDosen(); // Segarkan data dosen setelah update
+                    alert(response);
+                    $('#editDosenModal').modal('hide');
+                    fetchDosen(); 
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
