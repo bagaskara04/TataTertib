@@ -39,17 +39,22 @@ session_start();
         }
 
         .card-box {
-            display: inline-block;
-            width: 30%;
-            margin: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 150px; /* Tinggi minimum */
+            max-width: 90%; /* Membatasi lebar kotak */
+            margin: 0 auto 20px; /* Tengahkan kotak secara horizontal dan tambahkan margin bawah */
             padding: 20px;
             background-color: #f8f9fa;
             border-radius: 10px;
             text-align: center;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
             cursor: pointer;
+            transition: background-color 0.3s;
             position: relative;
         }
+
 
         .card-box:hover {
             background-color: #e2e6ea;
@@ -66,16 +71,23 @@ session_start();
             border-radius: 50%;
             padding: 5px 10px;
             position: absolute;
-            top: -10px;
-            right: -10px;
+            top: -5px;
+            right: -5px;
             font-size: 12px;
         }
 
         .activity-timestamp {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #555;
+            background-color: #ffffff; /* Pastikan latar putih terlihat */
+            padding: 20px; /* Beri ruang di dalamnya */
+            margin-top: 20px; /* Tambahkan jarak dari elemen atas */
+            border-radius: 10px; /* Tambahkan sedikit radius untuk estetika */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Sedikit bayangan untuk pemisahan visual */
         }
+
+        .activity-timestamp ul {
+            padding-left: 20px; /* Beri ruang dari tepi ul */
+        }
+        
     </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -133,20 +145,29 @@ session_start();
                 <div class="box-header with-border">
                     <h3 class="box-title">Tata Tertib Mahasiswa</h3>
                 </div>
-                <div class="box-body" style="background-color: #ffffff;"> <!-- Latar belakang putih di sini -->
-                    <!-- 3 Kotak yang bisa diklik -->
-                    <div class="card-box" onclick="window.location.href='pelanggaranSaya.php'">
-                        <div class="title">Total Pelanggaran</div>
-                        <div>Jumlah pelanggaran yang Anda lakukan: <strong>3</strong></div>
-                    </div>
+                <div class="row">
+    <!-- Kotak 1: Total Pelanggaran -->
+    <div class="col-md-6">
+        <div class="card-box d-flex align-items-center justify-content-center">
+            <div onclick="window.location.href='pelanggaranSaya.php'">
+                <div class="title">Total Pelanggaran</div>
+                <div>Jumlah pelanggaran yang Anda lakukan: <strong>3</strong></div>
+            </div>
+        </div>
+    </div>
 
-                    <div class="card-box" onclick="window.location.href='notifikasi.php'">
-                        <div class="title">Notifikasi</div>
-                        <div>
-                            Notifikasi Baru
-                        </div>
-                        <span class="notification-count">2</span> <!-- Notification count at the top-right corner -->
-                    </div>
+    <!-- Kotak 2: Notifikasi -->
+    <div class="col-md-6">
+        <div class="card-box d-flex align-items-center justify-content-center">
+            <div onclick="window.location.href='notifikasi.php'">
+                <div class="title">Notifikasi</div>
+                <div>Notifikasi Baru</div>
+                <span class="notification-count">2</span>
+            </div>
+        </div>
+    </div>
+</div>
+
 
                     <!-- Aktivitas Terbaru -->
                     <div class="activity-timestamp">
