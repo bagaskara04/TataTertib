@@ -79,7 +79,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
 
     <div class="content-wrapper">  
         <section class="content-header">  
-          
+        <h1>Dashboard Dosen</h1>
         </section>  
 
         <section class="content">
@@ -91,7 +91,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
                     <h1>Selamat Datang <?php echo htmlspecialchars($nama_dosen);?></h1>
                 </div>
                 <div class="box-footer">
-                    Tatib 
+                    JTI Polinema 
                 </div>
             </div>
         </section>
@@ -99,9 +99,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
 
     <footer class="main-footer">  
         <div class="pull-right hidden-xs">  
-            <b><a href="">Jurusan Teknologi Informasi</a></b>  
+        <b><a href="https://jti.polinema.ac.id/" target="_blank">Jurusan Teknologi Informasi</a></b>  
         </div>  
-        <strong><a href="">Politeknik Negeri Malang</a></strong>  
+        <strong><a href="https://polinema.ac.id" target="_blank">Politeknik Negeri Malang</a></strong>  
     </footer>  
 
 </div>  
