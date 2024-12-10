@@ -355,7 +355,7 @@ include 'getAdminName.php';
                 data: { nim: studentId },
                 success: function (data) {
                     // Isi data ke dalam form edit
-                    const student = JSON.parse(data); // Asumsikan response dalam format JSON
+                    const student = JSON.parse(data);
                     $('#edit_nim').val(student.nim);
                     $('#edit_nama').val(student.nama);
                     $('#edit_ttl').val(student.ttl);
