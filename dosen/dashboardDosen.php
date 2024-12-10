@@ -29,7 +29,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
         }
 
         .box-body h1 {
-        font-weight: bold; /* Membuat teks di dalam box-body menjadi tebal */
+            font-weight: bold; /* Membuat teks di dalam box-body menjadi tebal */
+        }
+
+        .box-title {
+            font-weight: bold;
+        }
+
+        .box-footer {
+            font-weight: bold;
         }
 
         .sidebar-menu > li > a {
@@ -77,7 +85,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
         </section>
     </aside>
 
-
     <div class="content-wrapper">
         <section class="content-header">
           
@@ -92,7 +99,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
                     <h1>Selamat Datang <?php echo htmlspecialchars($nama_dosen);?></h1>
                 </div>
                 <div class="box-footer">
-                    Tatib 
+                    Beranda 
                 </div>
             </div>
         </section>
