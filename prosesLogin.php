@@ -5,7 +5,7 @@ include 'koneksi.php'; // Menghubungkan dengan file koneksi yang berisi kode di 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Mengambil data dari form
     $username = $_POST['username'];  
-    $password = $_POST['password'];  // Tidak melakukan enkripsi password
+    $password = $_POST['password'];  // Password dari form
 
     // Query untuk memeriksa username dan password
     $sql = "SELECT * FROM users WHERE username = ? AND password = ?";  // Sesuaikan dengan nama tabel yang benar
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 break;
         }
     } else {
-        // Jika username atau password salah
+        // Jika username atau password salah, kirimkan alert dan arahkan ke halaman login
         echo "<script>alert('Username atau password salah!'); window.location.href = 'loginPage.html';</script>";
     }
 }

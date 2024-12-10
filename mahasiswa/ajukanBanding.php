@@ -1,10 +1,7 @@
 <?php
-include 'getAdminName.php';
-// Periksa apakah user sudah login dan levelnya admin
-if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 1) {
-    header("Location: ../loginPage.html"); // Redirect ke halaman login
-    exit();
-}
+// ajukanBanding.php
+
+session_start();
 ?>
 
 <!DOCTYPE html>
@@ -12,31 +9,26 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 1) {
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Dashboard Admin</title>
+    <title>Ajukan Banding - Dashboard Mahasiswa</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <!-- Bootstrap 3.3.6 -->
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="../fonts/font-awesome.min.css">
-    <!-- Ionicons -->
     <link rel="stylesheet" href="../fonts/ionicons.min.css">
-    <!-- Theme style -->
     <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
-    
     <style>
-      .main-header .navbar {
-          background-color: #115599 !important;
-      }
-  </style>
+        .main-header .navbar {
+            background-color: #115599 !important;
+        }
+    </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
     <header class="main-header">
-        <a href="dashboardAdmin.html" class="logo">
-            <span class="logo-mini"><b>S</b>TB</span>
-            <span class="logo-lg">SI<b>TATIB</b></span>
+        <a href="dashboardMahasiswa.php" class="logo">
+            <span class="logo-mini"><b>MHS</b></span>
+            <span class="logo-lg">SITATIB</span>
         </a>
         <nav class="navbar navbar-static-top">
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
@@ -52,7 +44,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 1) {
         <section class="sidebar">
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="../dist/img/profile3.png" class="img-circle" alt="User Image">
+                    <img src="../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
                     <p>Alexander Pierce</p>
@@ -60,32 +52,33 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 1) {
                 </div>
             </div>
             <ul class="sidebar-menu">
-                <li class="header">MAIN NAVIGATION</li>
-                <li class="active"><a href="dashboardAdmin.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-                <li><a href="dataMahasiswa.html"><i class="fa fa-users"></i> <span>Data Mahasiswa</span></a></li>
-                <li><a href="dataDosen.html"><i class="fa fa-users"></i> <span>Data Dosen</span></a></li>
-                <li><a href="dataDPA.html"><i class="fa fa-file-text-o"></i> <span>Data DPA</span></a></li>
-                <li><a href="dataLaporan.html"><i class="fa fa-file-text-o"></i> <span>Data Laporan Pelanggaran</span></a></li>
-                <li><a href="../logout.php"><i class="fa fa-exit"></i><span>Log Out</span></a></li>
+                <li><a href="dashboardMahasiswa.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                <li><a href="daftarTatib.php"><i class="fa fa-calendar"></i> <span>Daftar Tata Tertib</span></a></li>
+                <li><a href="pelanggaranSaya.php"><i class="fa fa-user"></i> <span>Pelanggaran Saya</span></a></li>
+                <li><a href="notifikasi.php"><i class="fa fa-book"></i> <span>Notifikasi</span></a></li>
+                <li><a href="logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
             </ul>
         </section>
     </aside>
 
     <div class="content-wrapper">
         <section class="content-header">
-            <h1>Dashboard<small>Control panel</small></h1>
+            <h1>Ajukan Banding</h1>
         </section>
 
         <section class="content">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Welcome ...</h3>
+                    <h3 class="box-title">Form Pengajuan Banding</h3>
                 </div>
-                <div class="box-body">
-                    <h1>Selamat Datang <?php echo htmlspecialchars($nama_admin);?></h1>
-                </div>
-                <div class="box-footer">
-                    Footer
+                <div class="box-body" style="background-color: #ffffff;">
+                    <form action="submitBanding.php" method="post">
+                        <div class="form-group">
+                            <label for="reason">Alasan Banding</label>
+                            <textarea class="form-control" id="reason" name="reason" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Ajukan Banding</button>
+                    </form>
                 </div>
             </div>
         </section>
@@ -93,9 +86,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 1) {
 
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
-            <b><a href="">Jurusan Teknologi Informasi</a></b>
+            <b>Jurusan Teknologi Informasi</b>
         </div>
-        <strong><a href="">Politeknik Negeri Malang</a></strong>
+        <strong>Politeknik Negeri Malang</strong>
     </footer>
 
 </div>

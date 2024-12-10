@@ -68,7 +68,6 @@ include 'getAdminName.php';
                 <li class="active"><a href="dataDosen.php"><i class="fa fa-users"></i> <span>Data Dosen</span></a></li>
                 <li><a href="dataDPA.php"><i class="fa fa-file-text-o"></i> <span>Data DPA</span></a></li>
                 <li><a href="dataLaporan.php"><i class="fa fa-file-text-o"></i> <span>Data Laporan Pelanggaran</span></a></li>
-                <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
             </ul>
         </section>
     </aside>

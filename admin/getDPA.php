@@ -13,6 +13,7 @@ $sql = "
     JOIN dosen ON dpa.nip = dosen.nip
     LEFT JOIN kelas ON dpa.dpa_id = kelas.dpa_id
     GROUP BY dpa.dpa_id, dosen.nama, dosen.nip
+    ORDER BY daftar_kelas asc
 ";
 
 $stmt = sqlsrv_query($conn, $sql);

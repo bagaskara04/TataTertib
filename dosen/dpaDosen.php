@@ -1,3 +1,36 @@
+<?php
+include 'getDosenName.php';
+// Periksa apakah user sudah login dan levelnya admin
+if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
+    header("Location: ../loginPage.html"); // Redirect ke halaman login
+    exit();
+}
+
+// Koneksi database
+include('../koneksi.php');  // Pastikan file koneksi ke database sudah benar
+
+// Query untuk mengambil data kelas dan DPA terkait
+$query = "
+    SELECT 
+        dpa.dpa_id,
+        dosen.nama AS nama_dpa,
+        STRING_AGG(kelas.nama_kelas, ', ') AS daftar_kelas
+    FROM dpa
+    JOIN dosen ON dpa.nip = dosen.nip
+    LEFT JOIN kelas ON dpa.dpa_id = kelas.dpa_id
+    GROUP BY dpa.dpa_id, dosen.nama
+    ORDER BY daftar_kelas asc
+";  
+
+// Eksekusi query
+$stmt = sqlsrv_query($conn, $query);
+
+// Cek apakah query berhasil dijalankan
+if (!$stmt) {
+    die("Query gagal dijalankan: " . print_r(sqlsrv_errors(), true));
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,16 +47,18 @@
             background-color: #115599 !important;
         }
 
-        /* Menambahkan CSS untuk memperbesar judul */
         .page-title {
-            font-size: 40px !important; /* Ukuran font lebih besar */
+            font-size: 40px !important;
             font-weight: bold;
-            color: #115599; /* Warna teks */
-            text-align: left; /* Rata tengah */
-            margin-bottom: 30px; /* Memberikan jarak bawah */
+            color: #115599;
+            text-align: left;
+            margin-bottom: 30px;
         }
 
-        /* Custom Styles lainnya */
+        .sidebar-menu > li > a {
+            font-weight: bold; /* Ketebalan teks menu */
+        }
+        
         .content-wrapper {
             padding: 30px;
         }
@@ -66,7 +101,7 @@
     <header class="main-header">
         <a href="dashboardDosen.html" class="logo">
             <span class="logo-mini"><b>D</b>DS</span>
-            <span class="logo-lg">Dashboard <b>Dosen</b></span>
+            <span class="logo-lg">SI<b>TATIB</b></span>
         </a>
         <nav class="navbar navbar-static-top">
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
@@ -83,24 +118,26 @@
         <section class="sidebar">
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img src="https://via.placeholder.com/160" class="img-circle" alt="User Image">
+                    <img src="../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <p>Dosen Teknik Informatika</p>
+                    <p><?php echo htmlspecialchars($nama_dosen); ?></p>
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
             <ul class="sidebar-menu">
-                <li class="header">MAIN NAVIGATION</li>
-                <li class="active"><a href="dashboardDosen.html"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-                <li><a href="dpaDosen.html"><i class="fa fa-users"></i> <span>Daftar DPA</span></a></li>
+            <li class="header">Menu </li>
+                <li><a href="dashboardDosen.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                <li class="active"><a href="dpaDosen.php"><i class="fa fa-users"></i> <span>Daftar DPA</span></a></li>
+                <li><a href="dpaDosen.php"><i class="fa fa-building"></i> <span>DPA Kelas</span></a></li>
+                <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
             </ul>
         </section>
-    </aside>
+    </aside>    
 
     <!-- Content Wrapper -->
     <div class="content-wrapper">
-        <section class="content">
+        <section class="content-header">
             <!-- Box -->
             <div class="box">
                 <div class="box-header with-border">
@@ -118,28 +155,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                                    <?php while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)): ?>
                                         <tr>
-                                            <td><?= htmlspecialchars($row['nama_kelas']) ?></td>
+                                        <td><?= htmlspecialchars($row['daftar_kelas'] ?? 'Tidak ada kelas') ?></td>
+
                                             <td><?= htmlspecialchars($row['nama_dpa']) ?></td>
                                         </tr>
                                     <?php endwhile; ?>
                                 </tbody>
                             </table>
-                        </div>
-                        <div class="col-md-6">
-                            <!-- DPA List -->
-                            <div class="dpa-container">
-                                <ul>
-                                    <?php mysqli_data_seek($result, 0); // Reset result pointer ?>
-                                    <?php while ($row = mysqli_fetch_assoc($result)): ?>
-                                        <li>
-                                            <span class="class-name"><?= htmlspecialchars($row['nama_kelas']) ?></span>
-                                            <span class="dpa-name">DPA: <?= htmlspecialchars($row['nama_dpa']) ?></span>
-                                        </li>
-                                    <?php endwhile; ?>
-                                </ul>
-                            </div>
                         </div>
                     </div>
                 </div>
