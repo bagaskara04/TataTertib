@@ -127,14 +127,13 @@ $pelanggaran_list = getAllPelanggaran($conn);
                         <label for="catatan">Catatan:</label>  
                         <textarea class="form-control" id="catatan" name="catatan" rows="3" required><?= htmlspecialchars($pengaduan['catatan']); ?></textarea>  
                     </div>  
-                    <div class="form-group">  
-                        <label for="status_pengaduan">Status Pengaduan:</label>  
-                        <select class="form-control" id="status_pengaduan" name="status_pengaduan" required>  
-                            <option value="proses" <?= $pengaduan['status_pengaduan'] == 'proses' ? 'selected' : ''; ?>>Proses</option>  
-                            <option value="tidak valid" <?= $pengaduan['status_pengaduan'] == 'tidak valid' ? 'selected' : ''; ?>>Tidak Valid</option>  
-                            <option value="valid" <?= $pengaduan['status_pengaduan'] == 'valid' ? 'selected' : ''; ?>>Valid</option>  
-                        </select>  
-                    </div>  
+                    <div class="status-display">
+                                    Status Pengaduan  
+                                <input type="hidden" id="status_pengaduan" name="status_pengaduan" value="proses">
+                                <div class="alert alert-info d-flex align-items-center" role="alert">
+                                    <span>Sedang Diproses</span>
+                                </div>
+                    </div> 
                     <button type="submit" name="update" class="btn btn-primary">Perbarui Pengaduan</button>  
                 </form>  
             </div>  
@@ -146,5 +145,49 @@ $pelanggaran_list = getAllPelanggaran($conn);
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>  
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>  
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>  
-</body>  
+
+<script>
+$(document).ready(function() {
+    // Form validation
+    $('form').submit(function(e) {
+        var nip = $('#nip').val();
+        var nim = $('#nim').val();
+        
+        // Validasi NIP (16 digit)
+        if (!/^\d{16}$/.test(nip)) {
+            alert('NIP harus 16 digit angka!');
+            e.preventDefault();
+            return false;
+        }
+        
+        // Validasi NIM (10 digit)
+        if (!/^\d{10}$/.test(nim)) {
+            alert('NIM harus 10 digit angka!');
+            e.preventDefault();
+            return false;
+        }
+        
+        // Validasi file jika ada
+        var fileInput = $('#bukti_pelanggaran')[0];
+        if (fileInput.files.length > 0) {
+            var file = fileInput.files[0];
+            var allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+            var maxSize = 2 * 1024 * 1024; // 2MB
+            
+            if (!allowedTypes.includes(file.type)) {
+                alert('Hanya file gambar yang diperbolehkan (JPG, PNG, GIF)');
+                e.preventDefault();
+                return false;
+            }
+            
+            if (file.size > maxSize) {
+                alert('Ukuran file maksimal 2MB');
+                e.preventDefault();
+                return false;
+            }
+        }
+    });
+});
+</script>
+</body>
 </html>
