@@ -1,5 +1,5 @@
 <?php
-include('../koneksi.php'); // Pastikan koneksi ke database sudah benar
+include('../koneksi.php'); 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nip'])) {
     $nip = $_POST['nip'];
@@ -28,16 +28,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nip'])) {
               throw new Exception("Gagal menghapus data dosen. Error: " . print_r($errors_dosen, true));
           }
 
-        // Commit transaksi jika semua berhasil
+        // Commit transaksi 
         sqlsrv_commit($conn);
-        echo "Dosen dengan NIP $nip berhasil dihapus beserta data pengguna terkait."; // Mengirimkan respons sukses
+        echo "Dosen dengan NIP $nip berhasil dihapus beserta data pengguna terkait.";
 
     } catch (Exception $e) {
-        // Rollback transaksi jika terjadi kesalahan
+        // Rollback transaksi
         sqlsrv_rollback($conn);
-        echo "Terjadi kesalahan saat menghapus data: " . $e->getMessage(); // Mengirimkan respons error
+        echo "Terjadi kesalahan saat menghapus data: " . $e->getMessage();
     }
 } else {
-    echo "Tidak ada NIP yang diterima atau metode salah."; // Jika bukan POST
+    echo "Tidak ada NIP yang diterima atau metode salah."; 
 }
 ?>

@@ -1,15 +1,14 @@
 <?php
-// Sertakan koneksi database
 include('../koneksi.php');
 
-// Cek jika parameter 'id' ada di dalam request GET
+//mengambil parameter id
 if (isset($_GET['id'])) {
     $laporanId = $_GET['id'];
 
-    // Base URL untuk folder uploads
+    // tempat penyimpanan bukti
     $baseUrl = 'http://localhost/TataTertib/laporanPelanggaran/';
 
-    // Query SQL untuk menggabungkan tabel yang diperlukan untuk mengambil detail laporan
+    // Query SQL
     $query = "
         SELECT 
             p.pengaduan_id, 
@@ -35,11 +34,9 @@ if (isset($_GET['id'])) {
         WHERE p.pengaduan_id = ?
     ";
 
-    // Menyiapkan statement SQL dan mengikat parameter
     if ($stmt = sqlsrv_prepare($conn, $query, array(&$laporanId))) {
         if (sqlsrv_execute($stmt)) {
             $result = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
-            // Jika data ditemukan, return data dalam format JSON
             if ($result) {
                 echo json_encode($result);
             } else {
@@ -52,10 +49,8 @@ if (isset($_GET['id'])) {
         echo json_encode(['error' => 'Gagal mempersiapkan query.']);
     }
 } else {
-    // Jika parameter 'id' tidak ada
     echo json_encode(['error' => 'ID laporan diperlukan.']);
 }
 
-// Menutup koneksi database
 sqlsrv_close($conn);
 ?>

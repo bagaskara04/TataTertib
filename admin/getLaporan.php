@@ -1,8 +1,8 @@
 <?php
-// Include database connection
+
 include('../koneksi.php');
 
-// Query to fetch the list of violation reports
+
 $query = "SELECT 
     p.pengaduan_id,
     d.nama AS dosen_nama,
@@ -21,15 +21,15 @@ JOIN pelanggaran pelang ON p.pelanggaran_id = pelang.pelanggaran_id
 JOIN sanksi_pelanggaran sp ON pelang.sanksi_id = sp.sanksi_id
 ORDER BY p.tanggal_pengaduan DESC;";
 
-// Execute the query
+
 $sqlsrv_query = sqlsrv_query($conn, $query);
 
-// Check if the query was successful
+
 if ($sqlsrv_query === false) {
     die(print_r(sqlsrv_errors(), true));
 }
 
-// Prepare the data for output
+
 $output = '';
 while ($row = sqlsrv_fetch_array($sqlsrv_query, SQLSRV_FETCH_ASSOC)) {
     $output .= '
@@ -52,9 +52,9 @@ while ($row = sqlsrv_fetch_array($sqlsrv_query, SQLSRV_FETCH_ASSOC)) {
     ';
 }
 
-// Return the table rows
+
 echo $output;
 
-// Close the database connection
+
 sqlsrv_close($conn);
 ?>
