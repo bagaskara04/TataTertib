@@ -5,9 +5,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
     header("Location: ../loginPage.html"); // Redirect ke halaman login
     exit();
 }
-
-//ambil nama dari dosen
-
 ?>
 
 <!DOCTYPE html>
