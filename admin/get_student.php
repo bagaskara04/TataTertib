@@ -1,12 +1,12 @@
 <?php
 include('../koneksi.php');
 
-// Query untuk mengambil semua data mahasiswa
+// Query mengambil data mahasiswa
 $query = "SELECT m.nim, m.nama, m.ttl, m.jenis_kelamin, m.alamat, m.email, m.no_phone, 
            p.prodi_nama, k.nama_kelas, m.phone_ortu, m.jumlah_pelanggaran
     FROM dbo.mahasiswa m
     JOIN dbo.kelas k ON m.kelas_id = k.kelas_id
-	JOIN dbo.prodi p ON p.prodi_id = m.prodi_id";  // Pastikan nama tabel dan kolom sesuai dengan yang ada di database
+	JOIN dbo.prodi p ON p.prodi_id = m.prodi_id";
 $result = sqlsrv_query($conn, $query);
 
 // Mengecek dan menampilkan data mahasiswa

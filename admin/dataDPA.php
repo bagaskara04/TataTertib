@@ -85,7 +85,7 @@ include 'getAdminName.php';
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Data DPA Akan Ditampilkan Di Sini -->
+                            
                         </tbody>
                     </table>
                 </div>
@@ -95,13 +95,11 @@ include 'getAdminName.php';
 
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
-            <b><a href="">Jurusan Teknologi Informasi</a></b>
+            <b><a href="https://jti.polinema.ac.id/" target="_blank">Jurusan Teknologi Informasi</a></b>
         </div>
-        <strong><a href="">Politeknik Negeri Malang</a></strong>
+        <strong><a href="https://polinema.ac.id" target="_blank">Politeknik Negeri Malang</a></strong>
     </footer>
-</div>
 
-<!-- jQuery -->
 <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
 <script src="../bootstrap/js/bootstrap.min.js"></script>
 <script src="../plugins/slimScroll/jquery.slimscroll.min.js"></script>

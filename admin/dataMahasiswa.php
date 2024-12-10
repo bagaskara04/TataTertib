@@ -79,7 +79,7 @@ include 'getAdminName.php';
                             <button class="btn btn-primary" data-toggle="modal" data-target="#addStudentModal">Tambah Mahasiswa</button>
                         </div>
                     </div>
-                    <table class="table table-bordered" id="studentTable">
+                    <table class="table table-bordered table-striped" id="studentTable">
                         <thead>
                             <tr>
                                 <th>NIM</th>
@@ -97,7 +97,6 @@ include 'getAdminName.php';
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Data fetched dynamically -->
                         </tbody>
                     </table>
                 </div>
@@ -150,14 +149,12 @@ include 'getAdminName.php';
                     <div class="form-group">
                         <label for="prodi">Program Studi</label>
                         <select class="form-control" id="prodi" name="prodi_id" required>
-                            <!-- Data Prodi akan diisi dengan Ajax -->
                         </select>
                     </div>
             
                     <div class="form-group">
                         <label for="kelas">Kelas</label>
                         <select class="form-control" id="kelas" name="kelas_id" required>
-                            <!-- Data Kelas akan diisi dengan Ajax -->
                         </select>
                     </div>                    
                     <div class="form-group">
@@ -179,7 +176,7 @@ include 'getAdminName.php';
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editStudentLabel">Edit Mahasiswa</h5>
+                <h5 class="modal-title" id="editStudentLabel">Edit Data Mahasiswa</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -217,13 +214,11 @@ include 'getAdminName.php';
                     <div class="form-group">
                         <label for="edit_prodi">Program Studi</label>
                         <select class="form-control" id="edit_prodi" name="prodi_id" required>
-                            <!-- Data Prodi akan diisi dengan Ajax -->
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="edit_kelas">Kelas</label>
                         <select class="form-control" id="edit_kelas" name="kelas_id" required>
-                            <!-- Data Kelas akan diisi dengan Ajax -->
                         </select>
                     </div>
                     <div class="form-group">
@@ -239,9 +234,12 @@ include 'getAdminName.php';
         </div>
     </div>
 </div>
-
-
-
+<footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b><a href="https://jti.polinema.ac.id/" target="_blank">Jurusan Teknologi Informasi</a></b>
+        </div>
+        <strong><a href="https://polinema.ac.id" target="_blank">Politeknik Negeri Malang</a></strong>
+    </footer>
 </div>
 
 <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
@@ -250,7 +248,7 @@ include 'getAdminName.php';
 
 <script>
     $(document).ready(function () {
-        // Fungsi untuk mengambil data mahasiswa dan mengisi tabel
+        // Data Mahasiswa
         function fetchStudents() {
             $.ajax({
                 url: 'get_student.php',
@@ -265,22 +263,22 @@ include 'getAdminName.php';
             });
         }
 
-                // Search functionality
+                // Search 
             $('#searchStudent').on('keyup', function () {
-                var value = $(this).val().toLowerCase(); // Ambil input search dan ubah jadi lowercase
+                var value = $(this).val().toLowerCase();
                 $('#studentTable tbody tr').filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1); // Filter rows berdasarkan query
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
                 });
             });
 
-        // Fungsi untuk mengambil data Prodi dan mengisi dropdown Prodi
+        // Fungsi data Prodi dan dropdown Prodi
         function fetchProdi() {
             $.ajax({
-                url: 'get_prodi.php', // Ganti dengan URL file PHP yang sesuai
+                url: 'get_prodi.php',
                 method: 'GET',
                 success: function (data) {
-                    $('#prodi').empty().append('<option value="">Pilih Prodi</option>'); // Kosongkan dropdown terlebih dahulu
-                    $('#prodi').append(data); // Isi dropdown Prodi
+                    $('#prodi').empty().append('<option value="">Pilih Prodi</option>');
+                    $('#prodi').append(data);
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -289,20 +287,20 @@ include 'getAdminName.php';
             });
         }
 
-        // Fungsi untuk mengambil data Kelas berdasarkan Prodi yang dipilih
+        // Fungsi untuk data kelas
         function fetchKelas(prodiId) {
             if (!prodiId) {
-                $('#kelas').empty().append('<option value="">Pilih Kelas</option>'); // Reset dropdown Kelas
+                $('#kelas').empty().append('<option value="">Pilih Kelas</option>');
                 return;
             }
 
             $.ajax({
-                url: 'get_kelas.php', // Ganti dengan URL file PHP yang sesuai
+                url: 'get_kelas.php',
                 method: 'GET',
-                data: { prodi_id: prodiId }, // Kirim prodi_id sebagai parameter
+                data: { prodi_id: prodiId }, // Kirim prodi_id
                 success: function (data) {
-                    $('#kelas').empty().append('<option value="">Pilih Kelas</option>'); // Kosongkan dropdown Kelas
-                    $('#kelas').append(data); // Isi dropdown Kelas
+                    $('#kelas').empty().append('<option value="">Pilih Kelas</option>');
+                    $('#kelas').append(data); // dropdown Kelas
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -311,48 +309,48 @@ include 'getAdminName.php';
             });
         }
 
-        // Panggil fungsi fetchStudents saat halaman dimuat
+        // Panggil fungsi fetchStudents
         fetchStudents();
 
-        // Panggil fungsi fetchProdi saat modal ditampilkan
+        // menampilkan prodi edit
         $('#addStudentModal').on('show.bs.modal', function () {
-            fetchProdi(); // Memuat data Prodi
-            $('#kelas').empty().append('<option value="">Pilih Kelas</option>'); // Reset dropdown Kelas
+            fetchProdi();
+            $('#kelas').empty().append('<option value="">Pilih Kelas</option>');
         });
 
-        // Ketika Prodi dipilih, panggil fetchKelas untuk memuat data Kelas
+        //panggil fetchKelas untuk memuat data Kelas
         $('#prodi').on('change', function () {
             const selectedProdiId = $(this).val();
-            fetchKelas(selectedProdiId); // Memuat data Kelas berdasarkan Prodi
+            fetchKelas(selectedProdiId); // data kelas berdasarkan Prodi
         });
 
         // Fungsi untuk menghapus Mahasiswa
         $(document).on('click', '.deleteStudent', function () {
-            const studentId = $(this).data('id'); // Mendapatkan ID mahasiswa
-            if (confirm('Yakin ingin menghapus data ini?')) { // Konfirmasi penghapusan
+            const studentId = $(this).data('id'); 
+            if (confirm('Yakin ingin menghapus data ini?')) {
                 $.ajax({
-                    url: 'deleteMahasiswa.php', // Endpoint penghapusan
+                    url: 'deleteMahasiswa.php', 
                     method: 'POST',
-                    data: { id: studentId }, // Kirim data ID mahasiswa untuk dihapus
+                    data: { id: studentId },
                     success: function (response) {
-                        alert(response); // Tampilkan pesan sukses
-                        fetchStudents(); // Refresh data mahasiswa setelah penghapusan
+                        alert(response);
+                        fetchStudents();
                     },
                     error: function (xhr, status, error) {
-                        console.error(xhr.responseText); // Tampilkan error di console
-                        alert("Terjadi kesalahan saat menghapus data mahasiswa."); // Tampilkan pesan error
+                        console.error(xhr.responseText);
+                        alert("Terjadi kesalahan saat menghapus data mahasiswa.");
                     }
                 });
             }
         });
 
-        // Fungsi untuk menampilkan data mahasiswa dalam modal edit
+        // fungsi modal edit
         $(document).on('click', '.editStudent', function () {
             const studentId = $(this).data('id'); // Mendapatkan ID mahasiswa
 
-            // Memuat data mahasiswa berdasarkan NIM menggunakan Ajax
+            // Memuat data pada modal
             $.ajax({
-                url: 'get_student_by_nim.php', // Endpoint untuk mengambil data mahasiswa berdasarkan NIM
+                url: 'get_student_by_nim.php', // mengambil data mahasiswa berdasarkan NIM
                 method: 'GET',
                 data: { nim: studentId },
                 success: function (data) {
@@ -366,9 +364,9 @@ include 'getAdminName.php';
                     $('#edit_email').val(student.email);
                     $('#edit_no_phone').val(student.no_phone);
                     $('#edit_phone_ortu').val(student.phone_ortu);
-                    fetchProdiEdit(student.prodi_id); // Memuat Prodi berdasarkan data mahasiswa
-                    fetchKelasEdit(student.prodi_id, student.kelas_id); // Memuat Kelas berdasarkan Prodi dan Kelas mahasiswa
-                    $('#editStudentModal').modal('show'); // Tampilkan modal edit
+                    fetchProdiEdit(student.prodi_id); 
+                    fetchKelasEdit(student.prodi_id, student.kelas_id);
+                    $('#editStudentModal').modal('show'); // modal edit
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -377,15 +375,15 @@ include 'getAdminName.php';
             });
         });
 
-        // Fungsi untuk mengambil data Prodi pada modal Edit
+        // Fungsi data Prodi pada modal Edit
         function fetchProdiEdit(selectedProdiId) {
             $.ajax({
-                url: 'get_prodi.php', // URL file PHP yang sesuai
+                url: 'get_prodi.php',
                 method: 'GET',
                 success: function (data) {
                     $('#edit_prodi').empty().append('<option value="">Pilih Prodi</option>');
                     $('#edit_prodi').append(data);
-                    $('#edit_prodi').val(selectedProdiId); // Pilih Prodi yang sudah ada
+                    $('#edit_prodi').val(selectedProdiId); 
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -394,16 +392,16 @@ include 'getAdminName.php';
             });
         }
 
-        // Fungsi untuk mengambil data Kelas pada modal Edit
+        // Fungsi data kelas pada modal edit
         function fetchKelasEdit(prodiId, selectedKelasId) {
             $.ajax({
-                url: 'get_kelas.php', // URL file PHP yang sesuai
+                url: 'get_kelas.php',
                 method: 'GET',
                 data: { prodi_id: prodiId },
                 success: function (data) {
                     $('#edit_kelas').empty().append('<option value="">Pilih Kelas</option>');
                     $('#edit_kelas').append(data);
-                    $('#edit_kelas').val(selectedKelasId); // Pilih Kelas yang sudah ada
+                    $('#edit_kelas').val(selectedKelasId);
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -414,16 +412,16 @@ include 'getAdminName.php';
 
         // Fungsi untuk memperbarui data mahasiswa
         $('#editStudentForm').on('submit', function (e) {
-            e.preventDefault(); // Mencegah form untuk reload halaman
+            e.preventDefault();
 
             $.ajax({
-                url: 'updateMahasiswa.php', // Endpoint PHP untuk memperbarui data mahasiswa
+                url: 'updateMahasiswa.php',
                 method: 'POST',
                 data: $(this).serialize(),
                 success: function (response) {
-                    alert(response); // Tampilkan pesan sukses
-                    $('#editStudentModal').modal('hide'); // Tutup modal
-                    fetchStudents(); // Segarkan data mahasiswa setelah perubahan
+                    alert(response);
+                    $('#editStudentModal').modal('hide');
+                    fetchStudents();
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
