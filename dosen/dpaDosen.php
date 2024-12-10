@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
 }
 
 // Koneksi database
-include('../koneksi.php');  // Pastikan file koneksi ke database sudah benar
+require_once '../koneksi.php';  // Pastikan file koneksi ke database sudah benar
 
 // Query untuk mengambil data kelas dan DPA terkait
 $query = "

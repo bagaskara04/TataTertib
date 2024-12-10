@@ -55,7 +55,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 1) {
                     <img src="../dist/img/profile3.png" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <p>Alexander Pierce</p>
+                <p><?php echo htmlspecialchars($nama_admin);?></p>
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>

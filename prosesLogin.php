@@ -1,34 +1,55 @@
 <?php
 session_start();
-include 'koneksi.php'; // Menghubungkan dengan file koneksi yang berisi kode di atas
+include 'koneksi.php'; // Memasukkan file koneksi
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Mengambil data dari form
-    $username = $_POST['username'];  
-    $password = $_POST['password'];  // Password dari form
+class Login {
+    private $conn;
 
-    // Query untuk memeriksa username dan password
-    $sql = "SELECT * FROM users WHERE username = ? AND password = ?";  // Sesuaikan dengan nama tabel yang benar
-    
-    // Menyiapkan query
-    $params = array($username, $password);
-    $stmt = sqlsrv_query($conn, $sql, $params);
-
-    if ($stmt === false) {
-        die(print_r(sqlsrv_errors(), true));
+    // Konstruktor untuk menerima koneksi global
+    public function __construct() {
+        global $conn; // Mengakses koneksi global
+        $this->conn = $conn;
     }
 
-    if (sqlsrv_has_rows($stmt)) {
-        // Mengambil data user
-        $user = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+    // Metode untuk memeriksa autentikasi
+    public function authenticate($username, $password) {
+        $sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+        $params = array($username, $password);
 
-        // Menyimpan data user ke dalam session
-        $_SESSION['user_id'] = $user['user_id'];
-        $_SESSION['username'] = $user['username'];
-        $_SESSION['level'] = $user['level'];
+        // Menjalankan query
+        $stmt = sqlsrv_query($this->conn, $sql, $params);
 
+        if ($stmt === false) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+
+        if (sqlsrv_has_rows($stmt)) {
+            $user = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+
+            // Menyimpan data user di session
+            $_SESSION['user_id'] = $user['user_id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['level'] = $user['level'];
+
+            return $user['level']; // Mengembalikan level user
+        } else {
+            return false; // Login gagal
+        }
+    }
+}
+
+// Proses login
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    // Membuat instance Login dan memeriksa autentikasi
+    $login = new Login();
+    $level = $login->authenticate($username, $password);
+
+    if ($level !== false) {
         // Redirect berdasarkan level user
-        switch ($user['level']) {
+        switch ($level) {
             case 1: // Admin
                 header("Location: admin/dashboardAdmin.php");
                 break;
@@ -43,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 break;
         }
     } else {
-        // Jika username atau password salah, kirimkan alert dan arahkan ke halaman login
+        // Jika username atau password salah
         echo "<script>alert('Username atau password salah!'); window.location.href = 'loginPage.html';</script>";
     }
 }
