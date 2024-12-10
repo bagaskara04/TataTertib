@@ -6,7 +6,7 @@ class Login {
     private $conn;
 
     public function __construct() {
-        global $conn; // koneksi global
+        global $conn; 
         $this->conn = $conn;
     }
 
