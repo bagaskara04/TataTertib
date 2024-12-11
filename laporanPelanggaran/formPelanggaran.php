@@ -25,7 +25,7 @@ function uploadFile($file) {
     $new_filename = uniqid() . '_' . time() . '.' . $file_extension;
     $target_file = $target_dir . $new_filename;
     
-    // Buat direktori jika belum ada
+    // Membuat direktori jika belum ada
     if (!file_exists($target_dir)) {
         mkdir($target_dir, 0777, true);
     }

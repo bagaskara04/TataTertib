@@ -1,10 +1,6 @@
 <?php
 include 'getDosenName.php';
 // Periksa apakah user sudah login dan levelnya admin
-if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
-    header("Location: ../loginPage.html"); // Redirect ke halaman login
-    exit();
-}
 
 // Koneksi database
 require_once '../koneksi.php';  // Pastikan file koneksi ke database sudah benar
@@ -19,7 +15,7 @@ $query = "
     JOIN dosen ON dpa.nip = dosen.nip
     LEFT JOIN kelas ON dpa.dpa_id = kelas.dpa_id
     GROUP BY dpa.dpa_id, dosen.nama
-    ORDER BY daftar_kelas asc
+    ORDER BY daftar_kelas 
 ";  
 
 // Eksekusi query
@@ -127,8 +123,9 @@ if (!$stmt) {
             </div>
             <ul class="sidebar-menu">
             <li class="header">Menu </li>
-                <li><a href="dashboardDosen.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+            <li><a href="dashboardDosen.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
                 <li class="active"><a href="dpaDosen.php"><i class="fa fa-users"></i> <span>Daftar DPA</span></a></li>
+                <li><a href="../laporanPelanggaran/formPelanggaran.php"><i class="fa fa-file-text-o"></i> <span> Laporan Pelanggaran</span></a></li>
                 <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
             </ul>
         </section>

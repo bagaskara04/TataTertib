@@ -56,9 +56,7 @@ $pelanggaran_list = getAllPelanggaran($conn);
             <li class="nav-item">  
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fa fa-bars"></i></a>  
             </li>  
-            <li class="nav-item d-none d-sm-inline-block">  
-                <a href="#" class="nav-link">Home</a>  
-            </li>  
+            <li class="nav-item d-none d-sm-inline-block"></li>  
         </ul>  
     </nav>  
 
@@ -73,7 +71,8 @@ $pelanggaran_list = getAllPelanggaran($conn);
                     <li class="nav-item">  
                         <a href="#" class="nav-link active">  
                             <i class="nav-icon fa fa-file"></i>  
-                            <p>Edit Pengaduan</p>  
+                            <p>Edit Pengaduan</p><br>
+                            <li><a href="formPelanggaran.php"><i class="fa fa-file-text-o"></i> <span>Laporan Pelanggaran</span></a></li>  
                         </a>  
                     </li>  
                 </ul>  
