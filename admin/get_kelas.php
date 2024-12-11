@@ -3,7 +3,7 @@ include('../koneksi.php');
 
 if (isset($_GET['prodi_id'])) {
     $prodi_id = $_GET['prodi_id'];
-    $query = "SELECT kelas_id, nama_kelas FROM kelas WHERE prodi_id = ?";
+    $query = "SELECT kelas_id, nama_kelas FROM kelas WHERE prodi_id = ? ORDER BY nama_kelas ASC";
     $stmt = sqlsrv_query($conn, $query, array($prodi_id));
 
     if ($stmt) {

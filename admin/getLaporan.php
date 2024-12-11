@@ -35,7 +35,7 @@ $output = '';
 $baseUrl = 'http://localhost/TataTertib/laporanPelanggaran/';
 while ($row = sqlsrv_fetch_array($sqlsrv_query, SQLSRV_FETCH_ASSOC)) {
     $buktiLink = $row['bukti_pelanggaran'] 
-        ? '<a href="' . $baseUrl . htmlspecialchars($row['bukti_pelanggaran']) . '" target="_blank">Lihat Bukti</a>' 
+        ? '<a href="' . $baseUrl . htmlspecialchars($row['bukti_pelanggaran']) . '" target="_blank" btn-primary>Lihat Bukti</a>' 
         : 'Tidak Tersedia';
 
     $output .= '
@@ -44,16 +44,16 @@ while ($row = sqlsrv_fetch_array($sqlsrv_query, SQLSRV_FETCH_ASSOC)) {
             <td>' . htmlspecialchars($row['dosen_nama']) . '</td>
             <td>' . htmlspecialchars($row['mahasiswa_nama']) . '</td>
             <td>' . htmlspecialchars($row['nim']) . '</td>
-            <td>' . htmlspecialchars($row['pelanggaran']) . '</td>
+            <td class="truncate">' . htmlspecialchars($row['pelanggaran']) . '</td>
             <td>' . htmlspecialchars($row['tingkat']) . '</td>
-            <td>' . htmlspecialchars($row['sanksi']) . '</td>
+            <td class="truncate">' . htmlspecialchars($row['sanksi']) . '</td>
             <td>' . htmlspecialchars($row['tanggal_pengaduan']) . '</td>
             <td>' . htmlspecialchars($row['status_pengaduan']) . '</td>
             <td>' . htmlspecialchars($row['catatan']) . '</td>
             <td>' . $buktiLink . '</td>
             <td>
                 <button class="btn btn-info btn-sm detailBtn" data-id="' . htmlspecialchars($row['pengaduan_id']) . '">Detail</button>
-                <button class="btn btn-warning btn-sm editBtn" data-id="' . htmlspecialchars($row['pengaduan_id']) . '" data-status="' . htmlspecialchars($row['status_pengaduan']) . '">Edit</button>
+                <button class="btn btn-success btn-sm editBtn" data-id="' . htmlspecialchars($row['pengaduan_id']) . '" data-status="' . htmlspecialchars($row['status_pengaduan']) . '">Validasi</button>
             </td>
         </tr>
     ';

@@ -19,10 +19,17 @@ include 'getAdminName.php';
     <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
     
+    
     <style>
         .main-header .navbar {
             background-color: #115599 !important;
         }
+        .truncate {
+    white-space: nowrap; /* Mencegah teks membungkus ke baris baru */
+    overflow: hidden; /* Menyembunyikan teks yang melampaui batas */
+    text-overflow: ellipsis; /* Menambahkan ellipsis (...) untuk teks yang terpotong */
+    max-width: 150px; /* Atur lebar maksimum sesuai kebutuhan */
+}
     </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -96,7 +103,7 @@ include 'getAdminName.php';
                                 <th>Status Pengaduan</th>
                                 <th>Catatan</th>
                                 <th>Bukti Pelanggaran</th>
-                                <th>Aksi</th>
+                                <th style="width: 135px;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -136,7 +143,7 @@ include 'getAdminName.php';
                     </div>
                     <div class="form-group">
                         <label for="pelanggaran">Pelanggaran</label>
-                        <input type="text" class="form-control" id="pelanggaran" readonly>
+                        <textarea class="form-control" id="pelanggaran" rows="3" readonly></textarea>
                     </div>
                     <div class="form-group">
                         <label for="tingkat">Tingkat</label>
@@ -144,7 +151,7 @@ include 'getAdminName.php';
                     </div>
                     <div class="form-group">
                         <label for="sanksi">Sanksi</label>
-                        <input type="text" class="form-control" id="sanksi" readonly>
+                        <textarea class="form-control" id="sanksi" rows="6" readonly></textarea>
                     </div>
                     <div class="form-group">
                         <label for="tanggalPengaduan">Tanggal Pengaduan</label>
@@ -156,11 +163,11 @@ include 'getAdminName.php';
                     </div>
                     <div class="form-group">
                         <label for="catatan">Catatan</label>
-                        <textarea class="form-control" id="catatan" readonly></textarea>
+                        <textarea class="form-control" id="catatan" rows="3" readonly></textarea>
                     </div>
                     <div class="form-group">
                         <label for="buktiPelanggaran">Bukti Pelanggaran</label>
-                        <a href="#" id="buktiPelanggaran" target="_blank" class="form-control">Lihat Bukti</a>
+                        <img id="buktiPelanggaran" src="" alt="Bukti Pelanggaran" style="max-width: 100%; height: auto; display: none;">
                     </div>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
                 </form>
@@ -262,11 +269,11 @@ $(document).on('click', '.detailBtn', function () {
                 $('#statusPengaduan').val(detail.status_pengaduan);
                 $('#catatan').val(detail.catatan);
                 if (detail.bukti_pelanggaran) {
-                    $('#buktiPelanggaran').attr('href', detail.bukti_pelanggaran);
-                    $('#buktiPelanggaran').text('Lihat Bukti');
+                    $('#buktiPelanggaran').attr('src', detail.bukti_pelanggaran);
+                    $('#buktiPelanggaran').show();
                 } else {
                     $('#buktiPelanggaran').attr('href', '#');
-                    $('#buktiPelanggaran').text('Bukti Tidak Tersedia');
+                    $('#buktiPelanggaran').hide()
                 }
                 // Tampilkan modal
                 $('#detailLaporanModal').modal('show');

@@ -30,7 +30,7 @@ class Login {
             $_SESSION['username'] = $user['username'];
             $_SESSION['level'] = $user['level'];
 
-            return $user['level']; // Mengembalikan level user
+            return $user['level'];
         } else {
             return false; // Login gagal
         }
@@ -42,7 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // instansiasi Login
     $login = new Login();
     $level = $login->authenticate($username, $password);
 
