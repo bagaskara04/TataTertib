@@ -95,6 +95,7 @@ include 'getAdminName.php';
                                 <th>Tanggal Pengaduan</th>
                                 <th>Status Pengaduan</th>
                                 <th>Catatan</th>
+                                <th>Bukti Pelanggaran</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>

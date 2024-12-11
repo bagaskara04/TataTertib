@@ -13,7 +13,8 @@ $query = "SELECT
     sp.nama_sanksi AS sanksi,
     FORMAT(p.tanggal_pengaduan, 'yyyy-MM-dd HH:mm:ss') AS tanggal_pengaduan,
     p.status_pengaduan,
-    p.catatan
+    p.catatan,
+    p.bukti_pelanggaran
 FROM pengaduan p
 JOIN dosen d ON p.nip = d.nip
 JOIN mahasiswa m ON p.nim = m.nim
@@ -31,7 +32,12 @@ if ($sqlsrv_query === false) {
 
 
 $output = '';
+$baseUrl = 'http://localhost/TataTertib/laporanPelanggaran/';
 while ($row = sqlsrv_fetch_array($sqlsrv_query, SQLSRV_FETCH_ASSOC)) {
+    $buktiLink = $row['bukti_pelanggaran'] 
+        ? '<a href="' . $baseUrl . htmlspecialchars($row['bukti_pelanggaran']) . '" target="_blank">Lihat Bukti</a>' 
+        : 'Tidak Tersedia';
+
     $output .= '
         <tr>
             <td>' . htmlspecialchars($row['pengaduan_id']) . '</td>
@@ -44,6 +50,7 @@ while ($row = sqlsrv_fetch_array($sqlsrv_query, SQLSRV_FETCH_ASSOC)) {
             <td>' . htmlspecialchars($row['tanggal_pengaduan']) . '</td>
             <td>' . htmlspecialchars($row['status_pengaduan']) . '</td>
             <td>' . htmlspecialchars($row['catatan']) . '</td>
+            <td>' . $buktiLink . '</td>
             <td>
                 <button class="btn btn-info btn-sm detailBtn" data-id="' . htmlspecialchars($row['pengaduan_id']) . '">Detail</button>
                 <button class="btn btn-warning btn-sm editBtn" data-id="' . htmlspecialchars($row['pengaduan_id']) . '" data-status="' . htmlspecialchars($row['status_pengaduan']) . '">Edit</button>
