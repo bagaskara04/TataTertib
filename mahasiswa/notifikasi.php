@@ -80,12 +80,7 @@ session_start();
                             <p class="list-group-item-text">Anda telah melakukan pelanggaran yang perlu segera diselesaikan.</p>
                             <small>2 jam yang lalu</small>
                         </a>
-                        <!-- Notifikasi 2 -->
-                        <a href="#" class="list-group-item">
-                            <h4 class="list-group-item-heading">Tata Tertib Baru</h4>
-                            <p class="list-group-item-text">Tata tertib baru telah diterbitkan, harap membacanya segera.</p>
-                            <small>1 hari yang lalu</small>
-                        </a>
+                    
                         <!-- Notifikasi 3 -->
                         <a href="#" class="list-group-item">
                             <h4 class="list-group-item-heading">Bukti Kompen Diterima</h4>

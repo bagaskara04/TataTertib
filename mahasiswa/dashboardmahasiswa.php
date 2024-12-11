@@ -14,7 +14,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 3) {
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Daftar Tata Tertib - Dashboard Mahasiswa</title>
+    <title>Dashboard Mahasiswa</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
@@ -91,7 +91,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 3) {
         .activity-timestamp ul {
             padding-left: 20px; /* Beri ruang dari tepi ul */
         }
-        
+
     </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -126,9 +126,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 3) {
                 </div>
             </div>
             <ul class="sidebar-menu">
-                <li class="header">Menu</li>
-                <li class="active"><a href="dashboardmahasiswa.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-                <li><a href="daftarTatib.php"><i class="fa fa-calendar"></i> <span>Daftar Tata Tertib</span></a></li>
+                <li class="header">MAIN NAVIGATION</li>
+                <li><a href="dashboardmahasiswa.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                <li class="active"><a href="daftarTatib.php"><i class="fa fa-calendar"></i> <span>Daftar Tata Tertib</span></a></li>
                 <li><a href="pelanggaranSaya.php"><i class="fa fa-user"></i> <span>Pelanggaran Saya</span></a></li>
                 <li><a href="notifikasi.php"><i class="fa fa-book"></i> <span>Notifikasi</span></a></li>
                 <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
@@ -140,15 +140,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 3) {
     <div class="content-wrapper">
         <!-- Header Konten -->
         <section class="content-header">
-            <h1>Daftar Tata Tertib</h1>
+            <h1>Dashboard</h1>
         </section>
 
         <!-- Konten Utama -->
         <section class="content">
             <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Tata Tertib Mahasiswa</h3>
-                </div>
+
                 <div class="row">
     <!-- Kotak 1: Total Pelanggaran -->
     <div class="col-md-6">
