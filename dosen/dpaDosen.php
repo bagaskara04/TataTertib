@@ -50,10 +50,6 @@ if (!$stmt) {
             text-align: left;
             margin-bottom: 30px;
         }
-
-        .sidebar-menu > li > a {
-            font-weight: bold; /* Ketebalan teks menu */
-        }
         
         .content-wrapper {
             padding: 30px;
