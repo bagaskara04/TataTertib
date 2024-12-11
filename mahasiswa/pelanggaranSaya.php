@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['idPelanggaran']) && i
                 <li><a href="daftarTatib.php"><i class="fa fa-calendar"></i> <span>Daftar Tata Tertib</span></a></li>
                 <li class="active"><a href="dashboardMahasiswa.php"><i class="fa fa-user"></i> <span>Pelanggaran Saya</span></a></li>
                 <li><a href="notifikasi.php"><i class="fa fa-book"></i> <span>Notifikasi</span></a></li>
-                <li><a href="logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
+                <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
             </ul>
         </section>
     </aside>
