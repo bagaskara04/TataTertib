@@ -275,7 +275,9 @@ $pelanggaran_list = getAllPelanggaran($conn);
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">  
                         <li class="nav-item">  
                         <li class="active"><a href="../dosen/dashboardDosen.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li> 
-                            </a>  
+                        <li><a href="../dosen/dpaDosen.php"><i class="fa fa-users"></i> <span>Daftar DPA</span></a></li>
+                        <li><a href="../laporanPelanggaran/formPelanggaran.php"><i class="fa fa-file-text-o"></i> <span> Laporan Pelanggaran</span></a></li>
+                        <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
                         </li>  
                     </ul>  
                 </nav>  
