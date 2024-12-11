@@ -3,6 +3,10 @@
 
 // Mulai sesi jika diperlukan
 session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 3) {  
+    header("Location: ../loginPage.html"); // Redirect ke halaman login  
+    exit();  
+} 
 ?>
 
 <!DOCTYPE html>
@@ -122,9 +126,9 @@ session_start();
                 </div>
             </div>
             <ul class="sidebar-menu">
-                <li class="header">MAIN NAVIGATION</li>
-                <li><a href="dashboardmahasiswa.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-                <li class="active"><a href="daftarTatib.php"><i class="fa fa-calendar"></i> <span>Daftar Tata Tertib</span></a></li>
+                <li class="header">Menu</li>
+                <li class="active"><a href="dashboardmahasiswa.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                <li><a href="daftarTatib.php"><i class="fa fa-calendar"></i> <span>Daftar Tata Tertib</span></a></li>
                 <li><a href="pelanggaranSaya.php"><i class="fa fa-user"></i> <span>Pelanggaran Saya</span></a></li>
                 <li><a href="notifikasi.php"><i class="fa fa-book"></i> <span>Notifikasi</span></a></li>
                 <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>

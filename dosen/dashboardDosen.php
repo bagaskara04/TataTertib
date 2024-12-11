@@ -28,13 +28,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 2) {
             margin-bottom: 30px;  
         }  
 
-        .box-body h1 {
-        font-weight: bold; /* Membuat teks di dalam box-body menjadi tebal */
-        }
-
-        .sidebar-menu > li > a {  
-            font-weight: bold; /* Ketebalan teks menu */  
-        }  
     </style>  
 </head>  
 <body class="hold-transition skin-blue sidebar-mini">  
