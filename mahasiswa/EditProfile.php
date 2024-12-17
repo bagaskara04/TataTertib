@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
         
         // Set upload directory and file name
-        $uploadDir = 'uploads';
+        $uploadDir = 'image/';
         $newFileName = 'profile_' . $nim . '.' . $fileExtension;
         $uploadPath = $uploadDir . $newFileName;
 
