@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 3) {
 // Ambil user_id dari session
 $user_id = $_SESSION['user_id'];
 
-// Query untuk mendapatkan nama admin
+// Query untuk mendapatkan nama mahasiswa
 $sql = "SELECT mahasiswa.nama 
         FROM mahasiswa 
         INNER JOIN users ON mahasiswa.nim = users.nim 

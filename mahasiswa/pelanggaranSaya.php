@@ -1,7 +1,7 @@
 <?php
 // pelanggaranSaya.php
 
-session_start();
+include 'getMahasiswaName.php';
 
 // Koneksi database
 require_once '../koneksi.php'; // Pastikan file koneksi database benar
@@ -53,10 +53,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['idPelanggaran']) && i
         echo "<script>alert('Gagal mengupload file.');</script>";
     }
 }
+// Query to get student's data
+$query = "
+    SELECT m.nim, m.nama, m.mahasiswa_img 
+    FROM mahasiswa m
+    JOIN users u ON m.nim = u.nim
+    WHERE u.user_id = ?
+";
+$params = array($user_id);
+$stmt1 = sqlsrv_query($conn, $query, $params);
+
+if ($stmt1 === false) {
+    die(print_r(sqlsrv_errors(), true));
+}
+
+// Fetch the student's data
+$data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -71,86 +89,108 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['idPelanggaran']) && i
         .main-header .navbar {
             background-color: #115599 !important;
         }
+
+        .user-panel {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-panel .pull-left.image {
+            margin-right: 15px;
+            /* Space between image and name */
+        }
+
+        .user-panel .pull-left.image img {
+            border-radius: 50%;
+            /* Makes the image circular */
+            width: 45px;
+            /* Adjust the size of the profile image */
+            height: 45px;
+            /* Adjust the size of the profile image */
+            object-fit: cover;
+            /* Ensures the image fits well inside the circle */
+        }
     </style>
 </head>
+
 <body class="hold-transition skin-blue sidebar-mini">
-<div class="wrapper">
+    <div class="wrapper">
 
-    <header class="main-header">
-        <a href="dashboardMahasiswa.php" class="logo">
-            <span class="logo-mini"><b>MHS</b></span>
-            <span class="logo-lg">SITATIB</span>
-        </a>
-        <nav class="navbar navbar-static-top">
-            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
+        <header class="main-header">
+            <a href="dashboardMahasiswa.php" class="logo">
+                <span class="logo-mini"><b>STB</b></span>
+                <span class="logo-lg">SITATIB</span>
             </a>
-        </nav>
-    </header>
+            <nav class="navbar navbar-static-top">
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+            </nav>
+        </header>
 
-    <aside class="main-sidebar">
-        <section class="sidebar">
-            <div class="user-panel">
-                <div class="pull-left image">
-                    <img src="../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+        <aside class="main-sidebar">
+            <section class="sidebar">
+                <div class="user-panel" onclick="window.location.href='Profile.php'" style="cursor: pointer;">
+                    <div class="pull-left image">
+                        <img src="<?php echo htmlspecialchars($data['mahasiswa_img']); ?>" class="img-circle" alt="User Image">
+                    </div>
+                    <div class="pull-left info">
+                        <p><?php echo htmlspecialchars($nama_mahasiswa); ?></p>
+                        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                    </div>
                 </div>
-                <div class="pull-left info">
-                    <p>Alexander Pierce</p>
-                    <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-                </div>
-            </div>
-            <ul class="sidebar-menu">
-                <li class="header">Menu</li>
-                <li><a href="dashboardMahasiswa.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-                <li><a href="daftarTatib.php"><i class="fa fa-calendar"></i> <span>Daftar Tata Tertib</span></a></li>
-                <li class="active"><a href="dashboardMahasiswa.php"><i class="fa fa-user"></i> <span>Pelanggaran Saya</span></a></li>
-                <li><a href="notifikasi.php"><i class="fa fa-book"></i> <span>Notifikasi</span></a></li>
-                <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
-            </ul>
-        </section>
-    </aside>
+                <ul class="sidebar-menu">
+                    <li class="header">Menu</li>
+                    <li><a href="dashboardMahasiswa.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                    <li><a href="daftarTatib.php"><i class="fa fa-calendar"></i> <span>Daftar Tata Tertib</span></a></li>
+                    <li class="active"><a href="dashboardMahasiswa.php"><i class="fa fa-user"></i> <span>Pelanggaran Saya</span></a></li>
+                    <li><a href="notifikasi.php"><i class="fa fa-book"></i> <span>Notifikasi</span></a></li>
+                    <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
+                </ul>
+            </section>
+        </aside>
 
-    <div class="content-wrapper">
-        <section class="content-header">
-            <h1>Pelanggaran Saya</h1>
-        </section>
+        <div class="content-wrapper">
+            <section class="content-header">
+                <h1>Pelanggaran Saya</h1>
+            </section>
 
-        <section class="content">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Daftar Pelanggaran yang Anda Lakukan</h3>
-                </div>
-                <div class="box-body" style="background-color: #ffffff;">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Deskripsi Pelanggaran</th>
-                                <th>Tanggal</th>
-                                <th>Status</th>
-                                <th>Ajukan Banding</th>
-                                <th>Upload Bukti Kompen</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $no = 1;
-                            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                                $status = "Kosong";
-                                if ($row['status_band'] === 'proses') {
-                                    $status = "Banding Sedang Diproses";
-                                } elseif ($row['status_band'] === 'ditolak') {
-                                    $status = "Banding Ditolak";
-                                } elseif ($row['status_band'] === 'disetujui') {
-                                    $status = "Banding Disetujui";
-                                } elseif ($row['status_kompen'] === 'selesai') {
-                                    $status = "Selesai";
-                                }
+            <section class="content">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Daftar Pelanggaran yang Anda Lakukan</h3>
+                    </div>
+                    <div class="box-body" style="background-color: #ffffff;">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Deskripsi Pelanggaran</th>
+                                    <th>Tanggal</th>
+                                    <th>Status</th>
+                                    <th>Ajukan Banding</th>
+                                    <th>Upload Bukti Kompen</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $no = 1;
+                                while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                                    $status = "Kosong";
+                                    if ($row['status_band'] === 'proses') {
+                                        $status = "Banding Sedang Diproses";
+                                    } elseif ($row['status_band'] === 'ditolak') {
+                                        $status = "Banding Ditolak";
+                                    } elseif ($row['status_band'] === 'disetujui') {
+                                        $status = "Banding Disetujui";
+                                    } elseif ($row['status_kompen'] === 'selesai') {
+                                        $status = "Selesai";
+                                    }
 
-                                echo "
+                                    echo "
                                     <tr>
                                         <td>{$no}</td>
                                         <td>{$row['deskripsi']}</td>
@@ -171,34 +211,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['idPelanggaran']) && i
                                         </td>
                                     </tr>
                                 ";
-                                $no++;
-                            }
+                                    $no++;
+                                }
 
-                            if ($no === 1) {
-                                echo "<tr><td colspan='6'>Tidak ada data pelanggaran.</td></tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
+                                if ($no === 1) {
+                                    echo "<tr><td colspan='6'>Tidak ada data pelanggaran.</td></tr>";
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+            </section>
+        </div>
+
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs">
+                <b>Jurusan Teknologi Informasi</b>
             </div>
-        </section>
+            <strong>Politeknik Negeri Malang</strong>
+        </footer>
+
     </div>
 
-    <footer class="main-footer">
-        <div class="pull-right hidden-xs">
-            <b>Jurusan Teknologi Informasi</b>
-        </div>
-        <strong>Politeknik Negeri Malang</strong>
-    </footer>
-
-</div>
-
-<script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
-<script src="../bootstrap/js/bootstrap.min.js"></script>
-<script src="../plugins/slimScroll/jquery.slimscroll.min.js"></script>
-<script src="../plugins/fastclick/fastclick.js"></script>
-<script src="../dist/js/app.min.js"></script>
-<script src="../dist/js/demo.js"></script>
+    <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../bootstrap/js/bootstrap.min.js"></script>
+    <script src="../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+    <script src="../plugins/fastclick/fastclick.js"></script>
+    <script src="../dist/js/app.min.js"></script>
+    <script src="../dist/js/demo.js"></script>
 </body>
+
 </html>
