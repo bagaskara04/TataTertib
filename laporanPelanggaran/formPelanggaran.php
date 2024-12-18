@@ -581,9 +581,9 @@ $(document).ready(function() {
         var nim = $('#nim').val();
         var nama = $('#nama').val();
         
-        // Validasi NIP (16 digit)
-        if (!/^\d{16}$/.test(nip)) {
-            alert('NIP harus 16 digit angka!');
+        // Validasi NIP (18 digit)
+        if (!/^\d{18}$/.test(nip)) {
+            alert('NIP harus 18 digit angka!');
             e.preventDefault();
             return false;
         }
