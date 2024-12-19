@@ -160,7 +160,7 @@ if (!$stmt) {
                     </div>
                 </div>
                 <div class="box-footer">
-                    <p>Pastikan data yang ditampilkan sudah benar.</p>
+                    <p>JTI Polinema</p>
                 </div>
             </div>
         </section>
