@@ -102,18 +102,31 @@ function getStatusBadge($status)
 }
 
 // Endpoint untuk mendapatkan nama berdasarkan NIM
-if (isset($_GET['get_nama']) && isset($_GET['nim'])) {
-    $nim = $_GET['nim'];
-    $sql = "SELECT nama FROM mahasiswa WHERE nim = ?";
-    $stmt = sqlsrv_query($conn, $sql, [$nim]);
+// Assuming your database connection is set up
 
-    if ($stmt && $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-        echo json_encode(['success' => true, 'nama' => $row['nama']]);
+if (isset($_GET['get_nama'])) {
+    $nim = $_GET['nim'];  // Ambil NIM dari query parameter
+
+    // Query untuk mengambil data mahasiswa berdasarkan NIM
+    $sql = "SELECT nama FROM mahasiswa WHERE nim = ?";
+    $params = array($nim);
+    $stmt = sqlsrv_query($conn, $sql, $params);
+
+    if ($stmt) {
+        $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+        if ($row) {
+            echo json_encode(['success' => true, 'nama' => $row['nama']]);
+        } else {
+            echo json_encode(['success' => false, 'nama' => '']); // Mahasiswa tidak ditemukan
+        }
     } else {
-        echo json_encode(['success' => false, 'message' => 'Nama tidak ditemukan']);
+        echo json_encode(['success' => false, 'nama' => '']); // Query gagal
     }
-    exit();
+
+    exit;
 }
+
+
 
 // Proses form submission untuk CREATE dan UPDATE  
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -562,20 +575,7 @@ $pelanggaran_list = getAllPelanggaran($conn);
             }
         }
 
-        // Inisialisasi DataTables dan event handlers
         $(document).ready(function() {
-            // DataTables initialization
-            $('#tabelPengaduan').DataTable({
-                "language": {
-                    "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/id.json"
-                },
-                "order": [
-                    [6, "desc"]
-                ],
-                "pageLength": 10,
-                "responsive": true
-            });
-
             // Event handler untuk input NIM
             $('#nim').on('input', function() {
                 var nim = $(this).val();
@@ -590,7 +590,7 @@ $pelanggaran_list = getAllPelanggaran($conn);
 
                     // Ajax request untuk mendapatkan nama
                     $.ajax({
-                        url: 'formPelanggaran.php',
+                        url: 'formPelanggaran.php', // Pastikan URL sesuai dengan file yang menangani request
                         method: 'GET',
                         data: {
                             get_nama: true,
@@ -598,21 +598,25 @@ $pelanggaran_list = getAllPelanggaran($conn);
                         },
                         dataType: 'json',
                         success: function(response) {
+                            console.log(response); // Debugging: Cek respons dari server
                             if (response.success) {
-                                $('#nama').val(response.nama);
+                                $('#nama').val(response.nama); // Isi nama mahasiswa
                             } else {
-                                $('#nama').val('Mahasiswa tidak ditemukan');
+                                $('#nama').val('Mahasiswa tidak ditemukan'); // Jika tidak ditemukan
                             }
                         },
                         error: function() {
-                            $('#nama').val('Error mengambil data');
+                            $('#nama').val('Error mengambil data'); // Jika terjadi error
                         },
                         complete: function() {
-                            $('.loading').hide();
+                            $('.loading').hide(); // Sembunyikan indikator loading
                         }
                     });
+                } else {
+                    $('#nama').val(''); // Reset jika NIM tidak valid
                 }
             });
+
 
             // Form validation
             $('#formPengaduan').submit(function(e) {
