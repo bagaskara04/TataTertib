@@ -358,10 +358,10 @@ $pelanggaran_list = getAllPelanggaran($conn);
                         <div class="card-body">
                             <div class="form-box">
                                 <form id="formPengaduan" action="formPelanggaran.php" method="POST" enctype="multipart/form-data">
-                                    <div class="form-group">
-                                        <label for="nip">NIP :</label>
-                                        <input type="text" class="form-control" id="nip" name="nip" required>
-                                    </div>
+                                <div class="form-group">
+                                    <label for="nip">NIP    </label>
+                                    <input type="text" class="form-control" id="nip" name="nip" value="<?php echo $_SESSION['nip']; ?>" readonly>
+                                </div>
                                     <div class="form-group">
                                         <label for="nim">NIM :</label>
                                         <input type="text" class="form-control" id="nim" name="nim" required>
@@ -392,11 +392,7 @@ $pelanggaran_list = getAllPelanggaran($conn);
                                     </div>
                                     <div class="form-group">
                                         <div class="status-display">
-                                            Status Pengaduan
                                             <input type="hidden" id="status_pengaduan" name="status_pengaduan" value="proses">
-                                            <div class="alert alert-info d-flex align-items-center" role="alert">
-                                                <span>proses</span>
-                                            </div>
                                         </div>
                                     </div>
                                     <button type="submit" name="submit" class="btn btn-primary">
@@ -620,16 +616,8 @@ $pelanggaran_list = getAllPelanggaran($conn);
 
             // Form validation
             $('#formPengaduan').submit(function(e) {
-                var nip = $('#nip').val();
                 var nim = $('#nim').val();
                 var nama = $('#nama').val();
-
-                // Validasi NIP (18 digit)
-                if (!/^\d{18}$/.test(nip)) {
-                    alert('NIP harus 18 digit angka!');
-                    e.preventDefault();
-                    return false;
-                }
 
                 // Validasi NIM (10 digit)
                 if (!/^\d{10}$/.test(nim)) {

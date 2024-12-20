@@ -1,4 +1,4 @@
- <?php  
+<?php  
 session_start();  
 require_once '../koneksi.php';  
 
@@ -72,18 +72,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt = sqlsrv_query($conn, $sql, $params);  
 
         if ($stmt) {  
-            $_SESSION['message'] = "Pengaduan berhasil diperbarui!";  
-            $_SESSION['message_type'] = "success";  
+            // Redirect ke halaman edit dengan status success
+            header("Location: edit.php?id=" . $pengaduan_id . "&status=success");
+            exit();
         } else {  
             $_SESSION['message'] = "Error: " . print_r(sqlsrv_errors(), true);  
             $_SESSION['message_type'] = "danger";  
+            header("Location: edit.php?id=" . $pengaduan_id);
+            exit();
         }  
     } catch (Exception $e) {  
         $_SESSION['message'] = "Error: " . $e->getMessage();  
         $_SESSION['message_type'] = "danger";  
+        header("Location: edit.php?id=" . $pengaduan_id);
+        exit();
     }  
-
-    header("Location: formPelanggaran.php");  
-    exit();  
 }
-?>    
+?>
