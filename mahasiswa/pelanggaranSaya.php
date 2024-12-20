@@ -1,67 +1,38 @@
 <?php
-// pelanggaranSaya.php
 
 include 'getMahasiswaName.php';
 
-// Koneksi database
-require_once '../koneksi.php'; // Pastikan file koneksi database benar
+// Periksa apakah pengguna sudah login dan memiliki level mahasiswa
+if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 3 || !isset($_SESSION['nim'])) {
+    header("Location: ../loginPage.html"); // Redirect ke halaman login jika sesi tidak valid
+    exit();
+}
+$nim = $_SESSION['nim'];
 
-// Ambil data pelanggaran mahasiswa berdasarkan ID pengguna (asumsikan session berisi ID pengguna)
-$userId = isset($_SESSION['userId']) ? $_SESSION['userId'] : 0;
-
-// Query untuk mengambil data pelanggaran mahasiswa
 $query = "
-    SELECT riwayat_id, nim, pengaduan_id, status_kompen, catatan_kompen, bukti_kompen
-    FROM riwayat 
-    WHERE nim = ?
+    SELECT p.pelanggaran, p.tingkat, sp.nama_sanksi, pg.bukti_pelanggaran, pg.tanggal_pengaduan, pg.status_pengaduan, pg.catatan
+    FROM pengaduan pg
+    JOIN pelanggaran p ON pg.pelanggaran_id = p.pelanggaran_id
+    JOIN sanksi_pelanggaran sp ON p.sanksi_id = sp.sanksi_id
+    WHERE pg.nim = ?
 ";
 
-$params = [$userId];
+$params = [$nim]; // Parameter untuk NIM Mahasiswa yang disimpan di session
 $stmt = sqlsrv_query($conn, $query, $params);
 
-if (!$stmt) {
-    die("Query gagal dijalankan: " . print_r(sqlsrv_errors(), true));
+if ($stmt === false) {
+    die("Error executing query: " . print_r(sqlsrv_errors(), true));
 }
 
-// Proses upload bukti kompen
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['idPelanggaran']) && isset($_FILES['bukti'])) {
-    $idPelanggaran = $_POST['idPelanggaran'];
-    $bukti = $_FILES['bukti'];
-
-    // Direktori tujuan untuk menyimpan file
-    $uploadDir = '../uploads/';
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0777, true);
-    }
-
-    $fileName = basename($bukti['name']);
-    $targetFilePath = $uploadDir . $fileName;
-
-    // Validasi file dan pindahkan ke direktori tujuan
-    if (move_uploaded_file($bukti['tmp_name'], $targetFilePath)) {
-        // Simpan informasi file ke database
-        $updateQuery = "UPDATE riwayat SET bukti_kompen = ? WHERE id = ? AND user_id = ?";
-        $updateParams = [$fileName, $idPelanggaran, $userId];
-
-        $updateStmt = sqlsrv_query($conn, $updateQuery, $updateParams);
-        if ($updateStmt) {
-            echo "<script>alert('Bukti kompen berhasil diupload.'); window.location.href='pelanggaranSaya.php';</script>";
-        } else {
-            echo "<script>alert('Gagal menyimpan bukti kompen ke database.');</script>";
-        }
-    } else {
-        echo "<script>alert('Gagal mengupload file.');</script>";
-    }
-}
 // Query to get student's data
-$query = "
+$query1 = "
     SELECT m.nim, m.nama, m.mahasiswa_img 
     FROM mahasiswa m
     JOIN users u ON m.nim = u.nim
     WHERE u.user_id = ?
 ";
 $params = array($user_id);
-$stmt1 = sqlsrv_query($conn, $query, $params);
+$stmt1 = sqlsrv_query($conn, $query1, $params);
 
 if ($stmt1 === false) {
     die(print_r(sqlsrv_errors(), true));
@@ -78,7 +49,7 @@ $data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Pelanggaran Saya - Dashboard Mahasiswa</title>
+    <title>Pelanggaran Saya</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../fonts/font-awesome.min.css">
@@ -89,33 +60,13 @@ $data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
         .main-header .navbar {
             background-color: #115599 !important;
         }
-
-        .user-panel {
-            display: flex;
-            align-items: center;
-        }
-
-        .user-panel .pull-left.image {
-            margin-right: 15px;
-            /* Space between image and name */
-        }
-
-        .user-panel .pull-left.image img {
-            border-radius: 50%;
-            /* Makes the image circular */
-            width: 45px;
-            /* Adjust the size of the profile image */
-            height: 45px;
-            /* Adjust the size of the profile image */
-            object-fit: cover;
-            /* Ensures the image fits well inside the circle */
-        }
     </style>
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
 
+        <!-- Header -->
         <header class="main-header">
             <a href="dashboardMahasiswa.php" class="logo">
                 <span class="logo-mini"><b>STB</b></span>
@@ -131,6 +82,7 @@ $data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
             </nav>
         </header>
 
+        <!-- Sidebar -->
         <aside class="main-sidebar">
             <section class="sidebar">
                 <div class="user-panel" onclick="window.location.href='Profile.php'" style="cursor: pointer;">
@@ -142,17 +94,19 @@ $data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
                         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                     </div>
                 </div>
+
                 <ul class="sidebar-menu">
                     <li class="header">Menu</li>
-                    <li><a href="dashboardMahasiswa.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                    <li><a href="dashboardmahasiswa.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
                     <li><a href="daftarTatib.php"><i class="fa fa-calendar"></i> <span>Daftar Tata Tertib</span></a></li>
-                    <li class="active"><a href="dashboardMahasiswa.php"><i class="fa fa-user"></i> <span>Pelanggaran Saya</span></a></li>
+                    <li class="active"><a href="pelanggaranSaya.php"><i class="fa fa-user"></i> <span>Pelanggaran Saya</span></a></li>
                     <li><a href="notifikasi.php"><i class="fa fa-book"></i> <span>Notifikasi</span></a></li>
                     <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
                 </ul>
             </section>
         </aside>
 
+        <!-- Content Wrapper -->
         <div class="content-wrapper">
             <section class="content-header">
                 <h1>Pelanggaran Saya</h1>
@@ -161,61 +115,37 @@ $data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
             <section class="content">
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Daftar Pelanggaran yang Anda Lakukan</h3>
+                        <h3 class="box-title">Daftar Pelanggaran</h3>
                     </div>
-                    <div class="box-body" style="background-color: #ffffff;">
+
+                    <div class="box-body">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Deskripsi Pelanggaran</th>
-                                    <th>Tanggal</th>
-                                    <th>Status</th>
-                                    <th>Ajukan Banding</th>
-                                    <th>Upload Bukti Kompen</th>
+                                    <th>Pelanggaran</th>
+                                    <th>Tingkat</th>
+                                    <th>Sanksi</th>
+                                    <th>Bukti Pelanggaran</th>
+                                    <th>Tanggal Pengaduan</th>
+                                    <th>Status Pengaduan</th>
+                                    <th>Catatan</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                 $no = 1;
                                 while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                                    $status = "Kosong";
-                                    if ($row['status_band'] === 'proses') {
-                                        $status = "Banding Sedang Diproses";
-                                    } elseif ($row['status_band'] === 'ditolak') {
-                                        $status = "Banding Ditolak";
-                                    } elseif ($row['status_band'] === 'disetujui') {
-                                        $status = "Banding Disetujui";
-                                    } elseif ($row['status_kompen'] === 'selesai') {
-                                        $status = "Selesai";
-                                    }
-
-                                    echo "
-                                    <tr>
-                                        <td>{$no}</td>
-                                        <td>{$row['deskripsi']}</td>
-                                        <td>{$row['tanggal']}</td>
-                                        <td>{$status}</td>
-                                        <td>
-                                            <form action='ajukanBanding.php' method='GET' style='display:inline;'>
-                                                <input type='hidden' name='idPelanggaran' value='{$row['id']}'>
-                                                <button type='submit' class='btn btn-primary btn-sm'>Ajukan Banding</button>
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <form action='' method='POST' enctype='multipart/form-data' style='display:inline;'>
-                                                <input type='hidden' name='idPelanggaran' value='{$row['id']}'>
-                                                <input type='file' name='bukti' required>
-                                                <button type='submit' class='btn btn-success btn-sm'>Upload</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                ";
-                                    $no++;
-                                }
-
-                                if ($no === 1) {
-                                    echo "<tr><td colspan='6'>Tidak ada data pelanggaran.</td></tr>";
+                                    echo "<tr>";
+                                    echo "<td>" . $no++ . "</td>";
+                                    echo "<td>" . htmlspecialchars($row['pelanggaran']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($row['tingkat']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($row['nama_sanksi']) . "</td>";
+                                    echo "<td><a href='../laporanPelanggaran/" . htmlspecialchars($row['bukti_pelanggaran']) . "' target='_blank'>Lihat Bukti</a></td>";
+                                    echo "<td>" . htmlspecialchars($row['tanggal_pengaduan']->format('Y-m-d')) . "</td>";
+                                    echo "<td>" . htmlspecialchars($row['status_pengaduan']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($row['catatan']) . "</td>";
+                                    echo "</tr>";
                                 }
                                 ?>
                             </tbody>
@@ -227,19 +157,18 @@ $data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
 
         <footer class="main-footer">
             <div class="pull-right hidden-xs">
-                <b>Jurusan Teknologi Informasi</b>
+                <b><a href="https://jti.polinema.ac.id/" target="_blank">Jurusan Teknologi Informasi</a></b>
             </div>
-            <strong>Politeknik Negeri Malang</strong>
+            <strong><a href="https://polinema.ac.id" target="_blank">Politeknik Negeri Malang</a></strong>
         </footer>
-
     </div>
 
+    <!-- Scripts -->
     <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
     <script src="../bootstrap/js/bootstrap.min.js"></script>
     <script src="../plugins/slimScroll/jquery.slimscroll.min.js"></script>
     <script src="../plugins/fastclick/fastclick.js"></script>
     <script src="../dist/js/app.min.js"></script>
-    <script src="../dist/js/demo.js"></script>
 </body>
 
 </html>

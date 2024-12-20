@@ -38,6 +38,7 @@ $data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
         .main-header .navbar {
             background-color: #115599 !important;
         }
+
         .user-panel {
             display: flex;
             align-items: center;
@@ -136,9 +137,9 @@ $data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
 
         <footer class="main-footer">
             <div class="pull-right hidden-xs">
-                <b>Jurusan Teknologi Informasi</b>
+                <b><a href="https://jti.polinema.ac.id/" target="_blank">Jurusan Teknologi Informasi</a></b>
             </div>
-            <strong>Politeknik Negeri Malang</strong>
+            <strong><a href="https://polinema.ac.id" target="_blank">Politeknik Negeri Malang</a></strong>
         </footer>
 
     </div>

@@ -58,10 +58,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fileName = $_FILES['mahasiswa_img']['name'];
         $fileSize = $_FILES['mahasiswa_img']['size'];
         $fileType = $_FILES['mahasiswa_img']['type'];
-        
+
         // Get file extension
         $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-        
+
         // Set upload directory and file name
         $uploadDir = 'image/';
         $newFileName = 'profile_' . $nim . '.' . $fileExtension;

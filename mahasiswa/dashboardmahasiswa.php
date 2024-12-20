@@ -229,17 +229,16 @@ $data = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
                         </ul>
                     </div>
                 </div>
+            </section>
         </div>
-        </section>
-    </div>
 
-    <!-- Footer -->
-    <footer class="main-footer">
-        <div class="pull-right hidden-xs">
-            <b>Jurusan Teknologi Informasi</b>
-        </div>
-        <strong>Politeknik Negeri Malang</strong>
-    </footer>
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs">
+                <b><a href="https://jti.polinema.ac.id/" target="_blank">Jurusan Teknologi Informasi</a></b>
+            </div>
+            <strong><a href="https://polinema.ac.id" target="_blank">Politeknik Negeri Malang</a></strong>
+        </footer>
 
     </div>
 
