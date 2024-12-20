@@ -121,6 +121,7 @@ if (!$stmt) {
             <li class="header">Menu </li>
             <li><a href="dashboardDosen.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
                 <li class="active"><a href="dpaDosen.php"><i class="fa fa-users"></i> <span>Daftar DPA</span></a></li>
+                <li><a href="daftarMahasiswa.php"><i class="fa fa-file-text-o"></i> <span>Daftar Mahasiswa</span></a></li>
                 <li><a href="../laporanPelanggaran/formPelanggaran.php"><i class="fa fa-file-text-o"></i> <span> Laporan Pelanggaran</span></a></li>
                 <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
             </ul>

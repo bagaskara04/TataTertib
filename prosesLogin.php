@@ -30,6 +30,16 @@ class Login {
             $_SESSION['username'] = $user['username'];
             $_SESSION['level'] = $user['level'];
 
+            // Jika user adalah dosen, ambil NIP dari tabel users
+            if ($user['level'] == 2) {
+                $nipQuery = "SELECT nip FROM users WHERE user_id = ?";
+                $nipStmt = sqlsrv_query($this->conn, $nipQuery, array($user['user_id']));
+
+                if ($nipStmt && $nipRow = sqlsrv_fetch_array($nipStmt, SQLSRV_FETCH_ASSOC)) {
+                    $_SESSION['nip'] = $nipRow['nip'];
+                }
+            }
+
             return $user['level'];
         } else {
             return false; // Login gagal
