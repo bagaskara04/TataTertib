@@ -2,16 +2,19 @@
 session_start();
 include 'koneksi.php';
 
-class Login {
+class Login
+{
     private $conn;
 
-    public function __construct() {
-        global $conn; 
+    public function __construct()
+    {
+        global $conn;
         $this->conn = $conn;
     }
 
     // autentikasi
-    public function authenticate($username, $password) {
+    public function authenticate($username, $password)
+    {
         $sql = "SELECT * FROM users WHERE username = ? AND password = ?";
         $params = array($username, $password);
 
@@ -40,6 +43,16 @@ class Login {
                 }
             }
 
+            // Jika user adalah mahasiswa, ambil NIM dari tabel mahasiswa
+            if ($user['level'] == 3) {
+                $nimQuery = "SELECT nim FROM users WHERE user_id = ?";
+                $nimStmt = sqlsrv_query($this->conn, $nimQuery, array($user['user_id']));
+
+                if ($nimStmt && $nimRow = sqlsrv_fetch_array($nimStmt, SQLSRV_FETCH_ASSOC)) {
+                    $_SESSION['nim'] = $nimRow['nim'];
+                }
+            }
+
             return $user['level'];
         } else {
             return false; // Login gagal
@@ -64,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 header("Location: dosen/dashboardDosen.php");
                 break;
             case 3: // Mahasiswa
-                header("Location: mahasiswa/dashboardMahasiswa.php");
+                header("Location: mahasiswa/dashboardmahasiswa.php");
                 break;
             default:
                 echo "<script>alert('Level user tidak valid!'); window.location.href = 'loginPage.html';</script>";
@@ -75,4 +88,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "<script>alert('Username atau password salah!'); window.location.href = 'loginPage.html';</script>";
     }
 }
-?>

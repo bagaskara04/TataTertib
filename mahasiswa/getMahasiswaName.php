@@ -33,4 +33,3 @@ if (sqlsrv_has_rows($stmt)) {
     $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
     $nama_mahasiswa = $row['nama'];
 }
-?>
