@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($stmt) {  
             // Redirect ke halaman edit dengan status success
-            header("Location: edit.php?id=" . $pengaduan_id . "&status=success");
+            header("Location: formPelanggaran.php?id=" . $pengaduan_id . "&status=success");
             exit();
         } else {  
             $_SESSION['message'] = "Error: " . print_r(sqlsrv_errors(), true);  
