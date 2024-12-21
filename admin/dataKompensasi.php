@@ -26,12 +26,10 @@ include 'getAdminName.php';
         table th,
         table td {
             white-space: nowrap;
-            /* Hindari pemotongan teks */
         }
 
         #searchStudent {
             margin-bottom: 15px;
-            /* Mengatur jarak bawah tombol search */
         }
     </style>
 </head>
@@ -119,6 +117,37 @@ include 'getAdminName.php';
         </footer>
     </div>
 
+    <!-- Modal Edit Status -->
+    <div class="modal fade" id="editStatusModal" tabindex="-1" role="dialog" aria-labelledby="editStatusModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editStatusModalLabel">Edit Status Kompensasi</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="editStatusForm">
+                    <div class="modal-body">
+                        <input type="hidden" id="riwayatId" name="riwayat_id">
+                        <div class="form-group">
+                            <label for="status_kompen">Pilih Status Kompensasi:</label>
+                            <select class="form-control" id="status_kompen" name="status_kompen">
+                                <option value="proses">Proses</option>
+                                <option value="ditolak">Ditolak</option>
+                                <option value="selesai">Selesai</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
     <script src="../bootstrap/js/bootstrap.min.js"></script>
     <script src="../plugins/slimScroll/jquery.slimscroll.min.js"></script>
@@ -126,6 +155,48 @@ include 'getAdminName.php';
     <script src="../dist/js/app.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Fungsi untuk validasi kompensasi dan langsung menampilkan modal edit status
+            $(document).on('click', '.validRiwayat', function() {
+                var riwayatId = $(this).data('id');
+                var currentStatus = 'proses'; // Set default status
+
+                // Set riwayat_id ke dalam input hidden
+                $('#riwayatId').val(riwayatId);
+                $('#status_kompen').val(currentStatus);
+
+                // Tampilkan modal
+                $('#editStatusModal').modal('show');
+            });
+
+            // Fungsi untuk mengedit status kompensasi
+            $('#editStatusForm').on('submit', function(e) {
+                e.preventDefault();
+                var riwayatId = $('#riwayatId').val();
+                var statusKompensasi = $('#status_kompen').val();
+
+                $.ajax({
+                    url: 'validasiKompensasi.php',
+                    method: 'POST',
+                    data: {
+                        riwayat_id: riwayatId,
+                        status_kompen: statusKompensasi
+                    },
+                    success: function(response) {
+                        if (response == 'success') {
+                            alert('Status kompensasi berhasil diubah!');
+                            $('#editStatusModal').modal('hide');
+                            location.reload();
+                        } else {
+                            alert('Terjadi kesalahan saat mengubah status kompensasi.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        alert('Terjadi kesalahan pada server.');
+                    }
+                });
+            });
+
             // Fungsi untuk mengambil data riwayat kompensasi
             function fetchRiwayat() {
                 $.ajax({

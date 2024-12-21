@@ -18,7 +18,6 @@ JOIN kelas k ON m.kelas_id = k.kelas_id
 JOIN pengaduan pg ON m.nim = pg.nim
 JOIN pelanggaran p ON pg.pelanggaran_id = p.pelanggaran_id
 WHERE k.nip = ?;
-
 ";
 
 $params = [$nip]; // Parameter untuk NIP dosen yang disimpan di session

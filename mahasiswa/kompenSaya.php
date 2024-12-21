@@ -1,46 +1,43 @@
 <?php
-
+// kompenSaya.php
 include 'getMahasiswaName.php';
-
-// Periksa apakah pengguna sudah login dan memiliki level mahasiswa
-if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 3 || !isset($_SESSION['nim'])) {
-    header("Location: ../loginPage.html"); // Redirect ke halaman login jika sesi tidak valid
+// Mulai sesi jika diperlukan
+if (!isset($_SESSION['user_id']) || $_SESSION['level'] != 3) {
+    header("Location: ../loginPage.html"); // Redirect ke halaman login  
     exit();
-}
-$nim = $_SESSION['nim'];
-
-$query = "
-    SELECT p.pelanggaran, p.tingkat, sp.nama_sanksi, pg.bukti_pelanggaran, pg.tanggal_pengaduan, pg.status_pengaduan, pg.catatan
-    FROM pengaduan pg
-    JOIN pelanggaran p ON pg.pelanggaran_id = p.pelanggaran_id
-    JOIN sanksi_pelanggaran sp ON p.sanksi_id = sp.sanksi_id
-    WHERE pg.nim = ?
-";
-
-$params = [$nim]; // Parameter untuk NIM Mahasiswa yang disimpan di session
-$stmt = sqlsrv_query($conn, $query, $params);
-
-if ($stmt === false) {
-    die("Error executing query: " . print_r(sqlsrv_errors(), true));
 }
 
 // Query to get student's data
-$query1 = "
+$query = "
     SELECT m.nim, m.nama, m.mahasiswa_img 
     FROM mahasiswa m
     JOIN users u ON m.nim = u.nim
     WHERE u.user_id = ?
 ";
 $params = array($user_id);
-$stmt1 = sqlsrv_query($conn, $query1, $params);
+$stmt = sqlsrv_query($conn, $query, $params);
 
-if ($stmt1 === false) {
+if ($stmt === false) {
     die(print_r(sqlsrv_errors(), true));
 }
 
 // Fetch the student's data
-$data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
+$data = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
 
+// Query untuk mendapatkan riwayat kompen mahasiswa
+$query_kompen = "
+SELECT r.riwayat_id, r.nim, r.pengaduan_id, r.status_kompen, r.catatan_kompen, r.bukti_kompen, p.pelanggaran
+FROM riwayat r
+JOIN pengaduan pg ON r.pengaduan_id = pg.pengaduan_id
+JOIN pelanggaran p ON pg.pelanggaran_id = p.pelanggaran_id
+WHERE r.nim = ?
+";
+$params_kompen = array($data['nim']);
+$stmt_kompen = sqlsrv_query($conn, $query_kompen, $params_kompen);
+
+if ($stmt_kompen === false) {
+    die(print_r(sqlsrv_errors(), true));
+}
 ?>
 
 <!DOCTYPE html>
@@ -49,16 +46,61 @@ $data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Pelanggaran Saya</title>
+    <title>Riwayat Kompen</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="../fonts/font-awesome.min.css">
+    <!-- Ionicons -->
     <link rel="stylesheet" href="../fonts/ionicons.min.css">
+    <!-- Theme style -->
     <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
     <style>
         .main-header .navbar {
             background-color: #115599 !important;
+        }
+
+        .table th,
+        .table td {
+            text-align: center;
+        }
+
+        .table {
+            margin-top: 20px;
+        }
+
+        .box {
+            margin-top: 20px;
+        }
+
+        .activity-timestamp {
+            background-color: #ffffff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .activity-timestamp ul {
+            padding-left: 20px;
+        }
+
+        .user-panel {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-panel .pull-left.image {
+            margin-right: 15px;
+        }
+
+        .user-panel .pull-left.image img {
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            object-fit: cover;
         }
     </style>
 </head>
@@ -90,7 +132,7 @@ $data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
                         <img src="<?php echo htmlspecialchars($data['mahasiswa_img']); ?>" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
-                        <p><?php echo htmlspecialchars($nama_mahasiswa); ?></p>
+                        <p><?php echo htmlspecialchars($data['nama']); ?></p>
                         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                     </div>
                 </div>
@@ -99,10 +141,10 @@ $data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
                     <li class="header">Menu</li>
                     <li><a href="dashboardmahasiswa.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
                     <li><a href="daftarTatib.php"><i class="fa fa-calendar"></i> <span>Daftar Tata Tertib</span></a></li>
-                    <li class="active"><a href="pelanggaranSaya.php"><i class="fa fa-user"></i> <span>Pelanggaran Saya</span></a></li>
-                    <li><a href="notifikasi.php"><i class="fa fa fa-bell"></i> <span>Notifikasi</span></a></li>
+                    <li><a href="pelanggaranSaya.php"><i class="fa fa-user"></i> <span>Pelanggaran Saya</span></a></li>
+                    <li><a href="notifikasi.php"><i class="fa fa-bell"></i> <span>Notifikasi</span></a></li>
                     <li><a href="buktiKompen.php"><i class="fa fa-book"></i> <span>Form Bukti Kompen</span></a></li>
-                    <li><a href="kompenSaya.php"><i class="fa fa-book"></i> <span>Riwayat Kompen</span></a></li>
+                    <li class="active"><a href="kompenSaya.php"><i class="fa fa-book"></i> <span>Riwayat Kompen</span></a></li>
                     <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
                 </ul>
             </section>
@@ -110,46 +152,42 @@ $data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
 
         <!-- Content Wrapper -->
         <div class="content-wrapper">
+            <!-- Header Konten -->
             <section class="content-header">
-                <h1>Pelanggaran Saya</h1>
+                <h1>Riwayat Kompen</h1>
             </section>
 
+            <!-- Konten Utama -->
             <section class="content">
                 <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Daftar Pelanggaran</h3>
-                    </div>
-
-                    <div class="box-body">
+                    <!-- Riwayat Kompen -->
+                    <div class="activity-timestamp">
+                        <h3>Riwayat Kompen</h3>
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th>No</th>
                                     <th>Pelanggaran</th>
-                                    <th>Tingkat</th>
-                                    <th>Sanksi</th>
-                                    <th>Bukti Pelanggaran</th>
-                                    <th>Tanggal Pengaduan</th>
-                                    <th>Status Pengaduan</th>
-                                    <th>Catatan</th>
+                                    <th>Status</th>
+                                    <th>Catatan Kompen</th>
+                                    <th>Bukti Kompen</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
+                                // Inisialisasi nomor urut
                                 $no = 1;
-                                while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                                    echo "<tr>";
-                                    echo "<td>" . $no++ . "</td>";
-                                    echo "<td>" . htmlspecialchars($row['pelanggaran']) . "</td>";
-                                    echo "<td>" . htmlspecialchars($row['tingkat']) . "</td>";
-                                    echo "<td>" . htmlspecialchars($row['nama_sanksi']) . "</td>";
-                                    echo "<td><a href='../laporanPelanggaran/" . htmlspecialchars($row['bukti_pelanggaran']) . "' target='_blank'>Lihat Bukti</a></td>";
-                                    echo "<td>" . htmlspecialchars($row['tanggal_pengaduan']->format('Y-m-d')) . "</td>";
-                                    echo "<td>" . htmlspecialchars($row['status_pengaduan']) . "</td>";
-                                    echo "<td>" . htmlspecialchars($row['catatan']) . "</td>";
-                                    echo "</tr>";
-                                }
-                                ?>
+                                while ($row = sqlsrv_fetch_array($stmt_kompen, SQLSRV_FETCH_ASSOC)) { ?>
+                                    <tr>
+                                        <td><?php echo $no++; ?></td>
+                                        <td><?php echo htmlspecialchars($row['pelanggaran']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['status_kompen']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['catatan_kompen']); ?></td>
+                                        <td>
+                                            <a href="<?php echo htmlspecialchars($row['bukti_kompen']); ?>" target="_blank">Lihat Bukti</a>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
                             </tbody>
                         </table>
                     </div>
@@ -157,12 +195,14 @@ $data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
             </section>
         </div>
 
+        <!-- Footer -->
         <footer class="main-footer">
             <div class="pull-right hidden-xs">
                 <b><a href="https://jti.polinema.ac.id/" target="_blank">Jurusan Teknologi Informasi</a></b>
             </div>
             <strong><a href="https://polinema.ac.id" target="_blank">Politeknik Negeri Malang</a></strong>
         </footer>
+
     </div>
 
     <!-- Scripts -->
@@ -171,6 +211,8 @@ $data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
     <script src="../plugins/slimScroll/jquery.slimscroll.min.js"></script>
     <script src="../plugins/fastclick/fastclick.js"></script>
     <script src="../dist/js/app.min.js"></script>
+    <script src="../dist/js/demo.js"></script>
+
 </body>
 
 </html>

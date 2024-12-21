@@ -179,7 +179,9 @@ $data = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
                     <li class="active"><a href="dashboardmahasiswa.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
                     <li><a href="daftarTatib.php"><i class="fa fa-calendar"></i> <span>Daftar Tata Tertib</span></a></li>
                     <li><a href="pelanggaranSaya.php"><i class="fa fa-user"></i> <span>Pelanggaran Saya</span></a></li>
-                    <li><a href="notifikasi.php"><i class="fa fa-book"></i> <span>Notifikasi</span></a></li>
+                    <li><a href="notifikasi.php"><i class="fa fa-bell"></i> <span>Notifikasi</span></a></li>
+                    <li><a href="buktiKompen.php"><i class="fa fa-book"></i> <span>Form Bukti Kompen</span></a></li>
+                    <li><a href="kompenSaya.php"><i class="fa fa-book"></i> <span>Riwayat Kompen</span></a></li>
                     <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
                 </ul>
             </section>
