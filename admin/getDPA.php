@@ -10,8 +10,8 @@ $sql = "
         STRING_AGG(kelas.nama_kelas, ', ') AS daftar_kelas
     FROM kelas
     JOIN dosen ON kelas.nip = dosen.nip
-    GROUP BY dosen.nama, dosen.nip
-    ORDER BY dosen.nama ASC
+    GROUP BY dosen.nama, dosen.nip, kelas.kelas_id
+    ORDER BY kelas.kelas_id ASC
 ";
 
 $stmt = sqlsrv_query($conn, $sql);
