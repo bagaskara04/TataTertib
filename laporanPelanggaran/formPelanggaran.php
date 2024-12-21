@@ -81,7 +81,7 @@ function getAllData($conn)
 // Fungsi untuk mendapatkan semua pelanggaran  
 function getAllPelanggaran($conn)
 {
-    $sql = "SELECT * FROM pelanggaran ORDER BY pelanggaran";
+    $sql = "SELECT DISTINCT * FROM pelanggaran ORDER BY tingkat ASC";
     $stmt = sqlsrv_query($conn, $sql);
     return $stmt ? $stmt : [];
 }
@@ -211,7 +211,7 @@ $pelanggaran_list = getAllPelanggaran($conn);
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <title>Data Pengaduan</title>
     <!-- Bootstrap 3.3.6 -->
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
@@ -510,6 +510,7 @@ $pelanggaran_list = getAllPelanggaran($conn);
     <script src="../plugins/fastclick/fastclick.js"></script>
     <script src="../dist/js/app.min.js"></script>
     <script src="../dist/js/demo.js"></script>
+
 
     <script>
         // Fungsi untuk preview image sebelum upload
