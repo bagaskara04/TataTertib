@@ -224,15 +224,10 @@ $pelanggaran_list = getAllPelanggaran($conn);
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <title>Data Pengaduan</title>
-    <!-- Bootstrap 3.3.6 -->
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="../fonts/font-awesome.min.css">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="../fonts/ionicons.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
-    <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/skins/_all-skins.min.css">
 
     <style>
         .loading {
@@ -369,10 +364,10 @@ $pelanggaran_list = getAllPelanggaran($conn);
                         <div class="card-body">
                             <div class="form-box">
                                 <form id="formPengaduan" action="formPelanggaran.php" method="POST" enctype="multipart/form-data">
-                                <div class="form-group">
-                                    <label for="nip">NIP    </label>
-                                    <input type="text" class="form-control" id="nip" name="nip" value="<?php echo $_SESSION['nip']; ?>" readonly>
-                                </div>
+                                    <div class="form-group">
+                                        <label for="nip">NIP </label>
+                                        <input type="text" class="form-control" id="nip" name="nip" value="<?php echo $_SESSION['nip']; ?>" readonly>
+                                    </div>
                                     <div class="form-group">
                                         <label for="nim">NIM :</label>
                                         <input type="text" class="form-control" id="nim" name="nim" required>
@@ -487,32 +482,33 @@ $pelanggaran_list = getAllPelanggaran($conn);
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modal Preview Image -->
-    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Preview Bukti</h5>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body text-center">
-                    <img id="modalImage" src="" style="max-width:100%; max-height:80vh;">
-                    <div id="imageError" class="alert alert-danger mt-2" style="display:none;">
-                        Gambar tidak dapat ditampilkan atau file tidak ditemukan
+
+        <!-- Modal Preview Image -->
+        <div class="modal fade" id="imageModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Preview Bukti</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img id="modalImage" src="" style="max-width:100%; max-height:80vh;">
+                        <div id="imageError" class="alert alert-danger mt-2" style="display:none;">
+                            Gambar tidak dapat ditampilkan atau file tidak ditemukan
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <footer class="main-footer">
-        <div class="pull-right hidden-xs">
-            <b><a href="https://jti.polinema.ac.id/" target="_blank">Jurusan Teknologi Informasi</a></b>
-        </div>
-        <strong><a href="https://polinema.ac.id" target="_blank">Politeknik Negeri Malang</a></strong>
-    </footer>
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs">
+                <b><a href="https://jti.polinema.ac.id/" target="_blank">Jurusan Teknologi Informasi</a></b>
+            </div>
+            <strong><a href="https://polinema.ac.id" target="_blank">Politeknik Negeri Malang</a></strong>
+        </footer>
+    </div>
 
     <!-- Scripts -->
     <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
