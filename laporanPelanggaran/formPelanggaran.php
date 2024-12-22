@@ -351,7 +351,7 @@ $pelanggaran_list = getAllPelanggaran($conn);
         <!-- Content Wrapper -->
         <div class="content-wrapper">
             <section class="content-header">
-                <h1>Laporan Pelanggaran</h1>
+                <h1>Form Pengaduan</h1>
             </section>
 
             <div class="content">
@@ -359,7 +359,7 @@ $pelanggaran_list = getAllPelanggaran($conn);
                     <!-- Form Upload -->
                     <div class="card mt-4">
                         <div class="card-header">
-                            <h3 class="card-title">Form Pengaduan</h3>
+                            
                         </div>
                         <div class="card-body">
                             <div class="form-box">
@@ -398,7 +398,7 @@ $pelanggaran_list = getAllPelanggaran($conn);
                                     </div>
                                     <div class="form-group">
                                         <div class="status-display">
-                                            <input type="hidden" id="status_pengaduan" name="status_pengaduan" value="proses">
+                                            <input type="hidden" id="status_pengaduan" name="status_pengaduan" value="baru">
                                         </div>
                                     </div>
                                     <button type="submit" name="submit" class="btn btn-primary">

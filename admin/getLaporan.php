@@ -20,7 +20,7 @@ JOIN dosen d ON p.nip = d.nip
 JOIN mahasiswa m ON p.nim = m.nim
 JOIN pelanggaran pelang ON p.pelanggaran_id = pelang.pelanggaran_id
 JOIN sanksi_pelanggaran sp ON pelang.sanksi_id = sp.sanksi_id
-ORDER BY p.tanggal_pengaduan DESC;";
+ORDER BY p.pengaduan_id DESC;";
 
 
 $sqlsrv_query = sqlsrv_query($conn, $query);
