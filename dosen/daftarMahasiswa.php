@@ -96,7 +96,7 @@ if ($stmt === false) {
 
         <div class="content-wrapper">
             <section class="content-header">
-                <h1>Daftar Mahasiswa</h1>
+                <h1>Catatan Pelanggaran</h1>
             </section>
 
             <section class="content">

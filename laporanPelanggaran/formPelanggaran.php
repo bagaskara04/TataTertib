@@ -49,8 +49,8 @@ function uploadFile($file)
     throw new Exception("Gagal mengupload file");
 }
 
-// Fungsi untuk mendapatkan semua data pengaduan  
-function getAllData($conn)
+// Fungsi untuk mendapatkan semua data pengaduan
+function getAllData($conn, $nip)
 {
     $sql = "SELECT   
                 p.pengaduan_id,   
@@ -66,9 +66,11 @@ function getAllData($conn)
             FROM pengaduan p  
             LEFT JOIN mahasiswa m ON p.nim = m.nim  
             LEFT JOIN pelanggaran pel ON p.pelanggaran_id = pel.pelanggaran_id  
+            WHERE p.nip = ? 
             ORDER BY p.tanggal_pengaduan DESC";
 
-    $stmt = sqlsrv_query($conn, $sql);
+    $params = array($nip);
+    $stmt = sqlsrv_query($conn, $sql, $params);
     $data = [];
 
     while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
@@ -128,7 +130,7 @@ if (isset($_GET['get_nama'])) {
 
 
 
-// Proses form submission untuk CREATE dan UPDATE  
+// Proses form submission untuk CREATE dan UPDATE 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['submit'])) {
         try {
@@ -202,7 +204,16 @@ if (isset($_GET['delete_id'])) {
     exit();
 }
 
-$data = getAllData($conn);
+// Periksa apakah user sudah login dan memiliki level 2 (dosen)
+if (!isset($_SESSION['level']) || $_SESSION['level'] != 2) {
+    echo "<script>alert('Akses ditolak! Anda tidak memiliki izin untuk mengakses halaman ini.'); window.location.href = 'loginPage.html';</script>";
+    exit();
+}
+
+// Ambil NIP dosen dari session
+$nip = $_SESSION['nip'];
+
+$data = getAllData($conn, $nip);
 $pelanggaran_list = getAllPelanggaran($conn);
 ?>
 

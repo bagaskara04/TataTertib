@@ -7,15 +7,14 @@ require_once '../koneksi.php';  // Pastikan file koneksi ke database sudah benar
 
 // Query untuk mengambil data kelas dan DPA terkait
 $query = "
-    SELECT 
-        dpa.dpa_id,
+SELECT 
         dosen.nama AS nama_dpa,
+        dosen.nip,
         STRING_AGG(kelas.nama_kelas, ', ') AS daftar_kelas
-    FROM dpa
-    JOIN dosen ON dpa.nip = dosen.nip
-    LEFT JOIN kelas ON dpa.dpa_id = kelas.dpa_id
-    GROUP BY dpa.dpa_id, dosen.nama
-    ORDER BY daftar_kelas 
+    FROM kelas
+    JOIN dosen ON kelas.nip = dosen.nip
+    GROUP BY dosen.nama, dosen.nip, kelas.kelas_id
+    ORDER BY kelas.kelas_id ASC
 ";  
 
 // Eksekusi query
