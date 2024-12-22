@@ -72,7 +72,7 @@ if ($stmt_kompen === false) {
         }
 
         .box {
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
         .activity-timestamp {
@@ -101,6 +101,14 @@ if ($stmt_kompen === false) {
             width: 45px;
             height: 45px;
             object-fit: cover;
+        }
+
+        .page-title {
+            font-size: 40px;
+            font-weight: bold;
+            color: #115599;
+            text-align: left;
+            margin-bottom: 30px;
         }
     </style>
 </head>
@@ -154,7 +162,7 @@ if ($stmt_kompen === false) {
         <div class="content-wrapper">
             <!-- Header Konten -->
             <section class="content-header">
-                <h1>Riwayat Kompen</h1>
+                <h1 class="page-title">Riwayat Kompen</h1>
             </section>
 
             <!-- Konten Utama -->
@@ -162,7 +170,6 @@ if ($stmt_kompen === false) {
                 <div class="box">
                     <!-- Riwayat Kompen -->
                     <div class="activity-timestamp">
-                        <h3>Riwayat Kompen</h3>
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -177,11 +184,26 @@ if ($stmt_kompen === false) {
                                 <?php
                                 // Inisialisasi nomor urut
                                 $no = 1;
-                                while ($row = sqlsrv_fetch_array($stmt_kompen, SQLSRV_FETCH_ASSOC)) { ?>
+                                while ($row = sqlsrv_fetch_array($stmt_kompen, SQLSRV_FETCH_ASSOC)) {
+                                    // Mengubah huruf pertama menjadi uppercase tanpa mengubah huruf lainnya
+                                    $status_kompen = ucfirst(strtolower($row['status_kompen']));
+
+                                    // Menentukan warna berdasarkan status
+                                    $statusClass = '';
+                                    if ($status_kompen == 'Baru') {
+                                        $statusClass = 'label label-info';  // Warna biru untuk status 'Baru'
+                                    } elseif ($status_kompen == 'Proses') {
+                                        $statusClass = 'label label-warning';  // Warna kuning untuk status 'Proses'
+                                    } elseif ($status_kompen == 'Ditolak') {
+                                        $statusClass = 'label label-danger';  // Warna merah untuk status 'Ditolak'
+                                    } elseif ($status_kompen == 'Selesai') {
+                                        $statusClass = 'label label-success';  // Warna hijau untuk status 'Selesai'
+                                    }
+                                ?>
                                     <tr>
                                         <td><?php echo $no++; ?></td>
                                         <td><?php echo htmlspecialchars($row['pelanggaran']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['status_kompen']); ?></td>
+                                        <td><span class="<?php echo $statusClass; ?>"><?php echo $status_kompen; ?></span></td>
                                         <td><?php echo htmlspecialchars($row['catatan_kompen']); ?></td>
                                         <td>
                                             <a href="<?php echo htmlspecialchars($row['bukti_kompen']); ?>" target="_blank">Lihat Bukti</a>

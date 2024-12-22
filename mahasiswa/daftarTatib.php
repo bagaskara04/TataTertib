@@ -131,6 +131,14 @@ $data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
             object-fit: cover;
             /* Ensures the image fits well inside the circle */
         }
+
+        .page-title {
+            font-size: 40px;
+            font-weight: bold;
+            color: #115599;
+            text-align: left;
+            margin-bottom: 30px;
+        }
     </style>
 </head>
 
@@ -182,7 +190,7 @@ $data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
         <div class="content-wrapper">
             <!-- Header Konten -->
             <section class="content-header">
-                <h1>Daftar Tata Tertib</h1>
+                <h1 class="page-title">Daftar Tata Tertib</h1>
             </section>
 
             <!-- Konten Utama -->

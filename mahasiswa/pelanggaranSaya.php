@@ -60,6 +60,14 @@ $data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
         .main-header .navbar {
             background-color: #115599 !important;
         }
+
+        .page-title {
+            font-size: 40px;
+            font-weight: bold;
+            color: #115599;
+            text-align: left;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 
@@ -111,7 +119,7 @@ $data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
         <!-- Content Wrapper -->
         <div class="content-wrapper">
             <section class="content-header">
-                <h1>Pelanggaran Saya</h1>
+                <h1 class="page-title">Pelanggaran Saya</h1>
             </section>
 
             <section class="content">

@@ -22,16 +22,32 @@ while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
         $bukti_url = "#"; // Jika file tidak ditemukan
     }
 
+    // Tentukan kelas warna berdasarkan status_kompen
+    $statusClass = '';
+    switch ($row['status_kompen']) {
+        case 'baru':
+            $statusClass = 'btn-primary';
+            break;
+        case 'proses':
+            $statusClass = 'btn-warning';
+            break;
+        case 'ditolak':
+            $statusClass = 'btn-danger';
+            break;
+        case 'selesai':
+            $statusClass = 'btn-success';
+            break;
+    }
+
     echo "<tr>
             <td>{$row['riwayat_id']}</td>
             <td>{$row['nim']}</td>
             <td>{$row['pengaduan_id']}</td>
-            <td>{$row['status_kompen']}</td>
+            <td><span class='btn $statusClass'>" . ucfirst(strtolower($row['status_kompen'])) . "</span></td>
             <td>{$row['catatan_kompen']}</td>
             <td><a href='{$bukti_path}' target='_blank'>Lihat Bukti</a></td>
             <td>
                 <button class='btn btn-primary validRiwayat' data-id='{$row['riwayat_id']}'>Validasi</button>
-                <button class='btn btn-danger deleteRiwayat' data-id='{$row['riwayat_id']}'>Hapus</button>
             </td>
           </tr>";
 }

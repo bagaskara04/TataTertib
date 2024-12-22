@@ -31,6 +31,8 @@ include 'getAdminName.php';
         #searchStudent {
             margin-bottom: 15px;
         }
+
+        
     </style>
 </head>
 
@@ -133,6 +135,7 @@ include 'getAdminName.php';
                         <div class="form-group">
                             <label for="status_kompen">Pilih Status Kompensasi:</label>
                             <select class="form-control" id="status_kompen" name="status_kompen">
+                                <option value="baru">Baru</option>
                                 <option value="proses">Proses</option>
                                 <option value="ditolak">Ditolak</option>
                                 <option value="selesai">Selesai</option>

@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
     <style>
         .box {
-            margin-top: 40px;
+            margin-top: 10px;
         }
 
         .form-container {
@@ -243,7 +243,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <section class="content-header">
                 <h1 class="page-title">Form Bukti Kompensasi</h1>
             </section>
-
             <section class="content">
                 <div class="box">
                     <div class="card">
