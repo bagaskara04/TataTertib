@@ -76,11 +76,6 @@ if ($stmt_kompensasi) {
             padding: 0 10px;
             /* Ensure there's some padding around the logo */
         }
-
-        .main-header .navbar .sidebar-toggle {
-            margin-left: 10px;
-            /* Adjust the position of the sidebar toggle if necessary */
-        }
     </style>
 </head>
 

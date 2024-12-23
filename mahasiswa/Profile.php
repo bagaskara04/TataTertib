@@ -113,6 +113,7 @@ if ($data['TTL']) {
             background-color: #115599;
             border-color: #115599;
         }
+
         .user-panel {
             display: flex;
             align-items: center;
@@ -172,6 +173,8 @@ if ($data['TTL']) {
                     <li><a href="daftarTatib.php"><i class="fa fa-calendar"></i> <span>Daftar Tata Tertib</span></a></li>
                     <li><a href="pelanggaranSaya.php"><i class="fa fa-user"></i> <span>Pelanggaran Saya</span></a></li>
                     <li><a href="notifikasi.php"><i class="fa fa-book"></i> <span>Notifikasi</span></a></li>
+                    <li><a href="buktiKompen.php"><i class="fa fa-book"></i> <span>Form Bukti Kompen</span></a></li>
+                    <li><a href="kompenSaya.php"><i class="fa fa-book"></i> <span>Riwayat Kompen</span></a></li>
                     <li><a href="../logout.php"><i class="fa fa-sign-out"></i> <span>Log Out</span></a></li>
                 </ul>
             </section>

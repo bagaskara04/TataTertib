@@ -151,9 +151,31 @@ $data = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
                                     echo "<td>" . htmlspecialchars($row['pelanggaran']) . "</td>";
                                     echo "<td>" . htmlspecialchars($row['tingkat']) . "</td>";
                                     echo "<td>" . htmlspecialchars($row['nama_sanksi']) . "</td>";
-                                    echo "<td><a href='../laporanPelanggaran/" . htmlspecialchars($row['bukti_pelanggaran']) . "' target='_blank'>Lihat Bukti</a></td>";
+                                    echo "<td><a class='btn btn-primary btn-sm' href='../laporanPelanggaran/" . htmlspecialchars($row['bukti_pelanggaran']) . "' target='_blank'>Lihat Bukti</a></td>";
                                     echo "<td>" . htmlspecialchars($row['tanggal_pengaduan']->format('Y-m-d')) . "</td>";
-                                    echo "<td>" . htmlspecialchars($row['status_pengaduan']) . "</td>";
+                                    // Warna tombol berdasarkan status pengaduan
+                                    $status = htmlspecialchars($row['status_pengaduan']);
+                                    $statusCapitalized = ucwords(strtolower($status));
+                                    $statusColor = "";
+
+                                    switch (strtolower($status)) {
+                                        case 'valid':
+                                            $statusColor = 'btn-success';
+                                            break;
+                                        case 'tidak valid':
+                                            $statusColor = 'btn-danger';
+                                            break;
+                                        case 'baru':
+                                            $statusColor = 'btn-primary';
+                                            break;
+                                        case 'proses':
+                                            $statusColor = 'btn-warning';
+                                            break;
+                                        default:
+                                            $statusColor = 'btn-default';
+                                    }
+
+                                    echo "<td><button class='btn $statusColor btn-sm'>" . $statusCapitalized . "</button></td>";
                                     echo "<td>" . htmlspecialchars($row['catatan']) . "</td>";
                                     echo "</tr>";
                                 }

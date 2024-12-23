@@ -175,9 +175,9 @@ if ($stmt_kompen === false) {
                                 <tr>
                                     <th>No</th>
                                     <th>Pelanggaran</th>
-                                    <th>Status</th>
-                                    <th>Catatan Kompen</th>
-                                    <th>Bukti Kompen</th>
+                                    <th>Status Kompensasi</th>
+                                    <th>Catatan Kompensasi</th>
+                                    <th>Bukti Kompensasi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -206,7 +206,7 @@ if ($stmt_kompen === false) {
                                         <td><span class="<?php echo $statusClass; ?>"><?php echo $status_kompen; ?></span></td>
                                         <td><?php echo htmlspecialchars($row['catatan_kompen']); ?></td>
                                         <td>
-                                            <a href="<?php echo htmlspecialchars($row['bukti_kompen']); ?>" target="_blank">Lihat Bukti</a>
+                                            <a class="btn btn-primary btn-sm" href="<?php echo htmlspecialchars($row['bukti_kompen']); ?>" target="_blank">Lihat Bukti</a>
                                         </td>
                                     </tr>
                                 <?php } ?>
