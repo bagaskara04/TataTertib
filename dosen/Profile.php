@@ -1,6 +1,6 @@
 <?php
-session_start();
-include '../koneksi.php'; // Koneksi database
+
+include 'getDosenName.php';
 
 // Cek apakah user sudah login
 if (!isset($_SESSION['user_id'])) {
@@ -10,13 +10,12 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id']; // Ambil user_id dari session
 
-// Query untuk mengambil data mahasiswa berdasarkan user_id dari tabel users
-$query = "SELECT m.nim, m.nama, m.TTL, m.jenis_kelamin, m.alamat, m.email, m.no_phone, 
-                 m.phone_ortu, m.jumlah_pelanggaran, m.mahasiswa_img, k.nama_kelas, p.prodi_nama
-          FROM mahasiswa m
-          LEFT JOIN kelas k ON m.kelas_id = k.kelas_id
-          LEFT JOIN prodi p ON m.prodi_id = p.prodi_id
-          JOIN users u ON m.nim = u.nim  -- Menghubungkan berdasarkan nim
+// Query untuk mengambil data dosen berdasarkan user_id dari tabel users
+$query = "SELECT d.nip, d.nama, d.TTL, d.jenis_kelamin, d.jabatan, d.email, d.no_phone, 
+                 d.alamat, d.dosen_img, k.nama_kelas
+          FROM dosen d
+          LEFT JOIN kelas k ON d.nip = k.nip  -- Menghubungkan berdasarkan nip jika dosen sebagai DPA
+          JOIN users u ON d.nip = u.nip  -- Menghubungkan berdasarkan nip
           WHERE u.user_id = ?";  // Kondisi untuk user_id dari session
 $params = array($user_id);
 $stmt = sqlsrv_query($conn, $query, $params);
@@ -28,17 +27,7 @@ if ($stmt === false) {
 // Ambil hasil query
 $data = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
 
-// Format TTL jika ada
-if ($data['TTL']) {
-    $ttlDate = DateTime::createFromFormat('Y-m-d', $data['TTL']);
-    if ($ttlDate) {
-        $ttlFormatted = $ttlDate->format('Y-m-d');
-    } else {
-        $ttlFormatted = 'Tanggal tidak valid';
-    }
-} else {
-    $ttlFormatted = 'Tanggal tidak tersedia';
-}
+
 ?>
 
 <!DOCTYPE html>
@@ -46,18 +35,13 @@ if ($data['TTL']) {
 
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Profile Mahasiswa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Dosen</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <!-- Bootstrap 3.3.6 -->
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="../fonts/font-awesome.min.css">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="../fonts/ionicons.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
-    <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/css/skins/_all-skins.min.css">
     <style>
         .main-header .navbar {
             background-color: #115599 !important;
@@ -121,27 +105,29 @@ if ($data['TTL']) {
 
         .user-panel .pull-left.image {
             margin-right: 15px;
-            /* Space between image and name */
         }
 
         .user-panel .pull-left.image img {
             border-radius: 50%;
-            /* Makes the image circular */
             width: 45px;
-            /* Adjust the size of the profile image */
             height: 45px;
-            /* Adjust the size of the profile image */
             object-fit: cover;
-            /* Ensures the image fits well inside the circle */
+        }
+
+        .page-title {
+            font-size: 40px;
+            font-weight: bold;
+            color: #115599;
+            text-align: left;
+            margin-bottom: 30px;
         }
     </style>
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
-        <!-- Header -->
         <header class="main-header">
-            <a href="dashboardMahasiswa.php" class="logo">
+            <a href="dashboardDosen.php" class="logo">
                 <span class="logo-mini"><b>STB</b></span>
                 <span class="logo-lg">SITATIB</span>
             </a>
@@ -155,62 +141,55 @@ if ($data['TTL']) {
             </nav>
         </header>
 
-        <!-- Sidebar -->
         <aside class="main-sidebar">
             <section class="sidebar">
-                <div class="user-panel">
+                <div class="user-panel" onclick="window.location.href='../dosen/Profile.php'" style="cursor: pointer;">
                     <div class="pull-left image">
-                        <img src="<?php echo htmlspecialchars($data['mahasiswa_img']); ?>" class="img-circle" alt="User Image">
+                        <img src="<?php echo htmlspecialchars($data['dosen_img']); ?>" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
-                        <p><?php echo htmlspecialchars($data['nama']); ?></p>
+                        <p><?php echo htmlspecialchars($nama_dosen); ?></p>
                         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                     </div>
                 </div>
                 <ul class="sidebar-menu">
                     <li class="header">Menu</li>
-                    <li><a href="dashboardMahasiswa.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-                    <li><a href="daftarTatib.php"><i class="fa fa-calendar"></i> <span>Daftar Tata Tertib</span></a></li>
-                    <li><a href="pelanggaranSaya.php"><i class="fa fa-user"></i> <span>Pelanggaran Saya</span></a></li>
-                    <li><a href="notifikasi.php"><i class="fa fa-book"></i> <span>Notifikasi</span></a></li>
-                    <li><a href="buktiKompen.php"><i class="fa fa-book"></i> <span>Form Bukti Kompen</span></a></li>
-                    <li><a href="kompenSaya.php"><i class="fa fa-book"></i> <span>Riwayat Kompen</span></a></li>
-                    <li><a href="../logout.php"><i class="fa fa-sign-out"></i> <span>Log Out</span></a></li>
+                    <li><a href="dashboardDosen.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                    <li><a href="dpaDosen.php"><i class="fa fa-users"></i> <span>Daftar DPA</span></a></li>
+                    <li><a href="daftarMahasiswa.php"><i class="fa fa-file-text-o"></i> <span>Daftar Mahasiswa</span></a></li>
+                    <li><a href="formPelanggaran.php"><i class="fa fa-file-text-o"></i> <span> Laporan Pelanggaran</span></a></li>
+                    <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
                 </ul>
             </section>
         </aside>
 
-        <!-- Content Wrapper -->
         <div class="content-wrapper">
-            <!-- Header Konten -->
             <section class="content-header">
-                <h1>Profil Mahasiswa</h1>
+                <h1>Profil Dosen</h1>
             </section>
 
-            <!-- Konten Profil -->
             <section class="content">
                 <div class="box box-primary">
                     <div class="box-body box-profile">
                         <div class="profile-header">
-                            <img class="profile-user-img img-responsive img-circle" src="<?php echo htmlspecialchars($data['mahasiswa_img']); ?>" alt="User profile picture">
+                            <img class="profile-user-img img-responsive img-circle" src="<?php echo htmlspecialchars($data['dosen_img']); ?>" alt="User profile picture">
                             <h3 class="profile-username"><?php echo htmlspecialchars($data['nama']); ?></h3>
-                            <p><?php echo htmlspecialchars($data['nim']); ?></p>
+                            <p><?php echo htmlspecialchars($data['nip']); ?></p>
                         </div>
 
-                        <!-- Detail Informasi -->
                         <div class="profile-details">
                             <table class="profile-table">
                                 <tr>
                                     <th>TTL</th>
-                                    <td><?php echo htmlspecialchars($ttlFormatted); ?></td>
+                                    <td><?php echo htmlspecialchars($data['TTL']); ?></td>
                                 </tr>
                                 <tr>
                                     <th>Jenis Kelamin</th>
                                     <td><?php echo $data['jenis_kelamin'] == 'L' ? 'Laki-laki' : 'Perempuan'; ?></td>
                                 </tr>
                                 <tr>
-                                    <th>Alamat</th>
-                                    <td><?php echo htmlspecialchars($data['alamat']); ?></td>
+                                    <th>Jabatan</th>
+                                    <td><?php echo htmlspecialchars($data['jabatan']); ?></td>
                                 </tr>
                                 <tr>
                                     <th>Email</th>
@@ -221,27 +200,22 @@ if ($data['TTL']) {
                                     <td><?php echo htmlspecialchars($data['no_phone']); ?></td>
                                 </tr>
                                 <tr>
-                                    <th>No HP Orang Tua</th>
-                                    <td><?php echo htmlspecialchars($data['phone_ortu']); ?></td>
+                                    <th>Alamat</th>
+                                    <td><?php echo htmlspecialchars($data['alamat']); ?></td>
                                 </tr>
                                 <tr>
-                                    <th>Kelas</th>
-                                    <td><?php echo htmlspecialchars($data['nama_kelas']); ?></td>
-                                </tr>
-                                <tr>
-                                    <th>Program Studi</th>
-                                    <td><?php echo htmlspecialchars($data['prodi_nama']); ?></td>
+                                    <th>DPA Kelas</th>
+                                    <td><?php echo htmlspecialchars($data['nama_kelas'] ?: 'Tidak ada'); ?></td>
                                 </tr>
                             </table>
                         </div>
 
-                        <a href="EditProfile.php" class="btn btn-primary btn-block"><b>Edit Profil</b></a>
+                        <a href="EditProfile.php" class="btn btn-primary btn-block"><b>Edit Profile</b></a>
                     </div>
                 </div>
             </section>
         </div>
 
-        <!-- Footer -->
         <footer class="main-footer">
             <div class="pull-right hidden-xs">
                 <b><a href="https://jti.polinema.ac.id/" target="_blank">Jurusan Teknologi Informasi</a></b>
@@ -250,7 +224,6 @@ if ($data['TTL']) {
         </footer>
     </div>
 
-    <!-- Scripts -->
     <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
     <script src="../bootstrap/js/bootstrap.min.js"></script>
     <script src="../plugins/slimScroll/jquery.slimscroll.min.js"></script>

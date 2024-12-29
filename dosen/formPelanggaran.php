@@ -1,6 +1,5 @@
 <?php
-include '../dosen/getDosenName.php';
-
+include 'getDosenName.php';
 // Fungsi untuk validasi image
 function validateImage($file)
 {
@@ -204,17 +203,29 @@ if (isset($_GET['delete_id'])) {
     exit();
 }
 
-// Periksa apakah user sudah login dan memiliki level 2 (dosen)
-if (!isset($_SESSION['level']) || $_SESSION['level'] != 2) {
-    echo "<script>alert('Akses ditolak! Anda tidak memiliki izin untuk mengakses halaman ini.'); window.location.href = 'loginPage.html';</script>";
-    exit();
-}
 
 // Ambil NIP dosen dari session
 $nip = $_SESSION['nip'];
 
 $data = getAllData($conn, $nip);
 $pelanggaran_list = getAllPelanggaran($conn);
+
+// Query to get student's data
+$query1 = "
+    SELECT d.nip, d.nama, d.dosen_img 
+    FROM dosen d 
+    JOIN users u ON d.nip = u.nip
+    WHERE u.user_id = ?
+";
+$params1 = array($user_id);
+$stmt1 = sqlsrv_query($conn, $query1, $params1);
+
+if ($stmt1 === false) {
+    die(print_r(sqlsrv_errors(), true));
+}
+
+// Fetch the student's data
+$dataa = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -294,6 +305,22 @@ $pelanggaran_list = getAllPelanggaran($conn);
             border-radius: 5px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
+
+        .user-panel {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-panel .pull-left.image {
+            margin-right: 15px;
+        }
+
+        .user-panel .pull-left.image img {
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            object-fit: cover;
+        }
     </style>
 </head>
 
@@ -327,9 +354,9 @@ $pelanggaran_list = getAllPelanggaran($conn);
         <!-- Sidebar -->
         <aside class="main-sidebar">
             <section class="sidebar">
-                <div class="user-panel">
+                <div class="user-panel" onclick="window.location.href='../dosen/Profile.php'" style="cursor: pointer;">
                     <div class="pull-left image">
-                        <img src="../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                        <img src="<?php echo htmlspecialchars($dataa['dosen_img']); ?>" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
                         <p><?php echo htmlspecialchars($nama_dosen); ?></p>
@@ -338,10 +365,10 @@ $pelanggaran_list = getAllPelanggaran($conn);
                 </div>
                 <ul class="sidebar-menu">
                     <li class="header"> Menu </li>
-                    <li><a href="../dosen/dashboardDosen.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-                    <li><a href="../dosen/dpaDosen.php"><i class="fa fa-users"></i> <span>Daftar DPA</span></a></li>
-                    <li><a href="../dosen/daftarMahasiswa.php"><i class="fa fa-file-text-o"></i> <span>Daftar Mahasiswa</span></a></li>
-                    <li class="active"><a href="../laporanPelanggaran/formPelanggaran.php"><i class="fa fa-file-text-o"></i> <span> Laporan Pelanggaran</span></a></li>
+                    <li><a href="dashboardDosen.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                    <li><a href="dpaDosen.php"><i class="fa fa-users"></i> <span>Daftar DPA</span></a></li>
+                    <li><a href="daftarMahasiswa.php"><i class="fa fa-file-text-o"></i> <span>Daftar Mahasiswa</span></a></li>
+                    <li class="active"><a href="formPelanggaran.php"><i class="fa fa-file-text-o"></i> <span> Laporan Pelanggaran</span></a></li>
                     <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
 
                 </ul>
@@ -359,7 +386,7 @@ $pelanggaran_list = getAllPelanggaran($conn);
                     <!-- Form Upload -->
                     <div class="card mt-4">
                         <div class="card-header">
-                            
+
                         </div>
                         <div class="card-body">
                             <div class="form-box">

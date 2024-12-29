@@ -27,6 +27,23 @@ $stmt = sqlsrv_query($conn, $query, $params);
 if ($stmt === false) {
     die(print_r(sqlsrv_errors(), true));
 }
+
+// Query to get student's data
+$query1 = "
+    SELECT d.nip, d.nama, d.dosen_img 
+    FROM dosen d 
+    JOIN users u ON d.nip = u.nip
+    WHERE u.user_id = ?
+";
+$params1 = array($user_id);
+$stmt1 = sqlsrv_query($conn, $query1, $params1);
+
+if ($stmt1 === false) {
+    die(print_r(sqlsrv_errors(), true));
+}
+
+// Fetch the student's data
+$data1 = sqlsrv_fetch_array($stmt1, SQLSRV_FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -51,6 +68,27 @@ if ($stmt === false) {
             text-align: left;
             margin-bottom: 30px;
         }
+
+        .user-panel {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-panel .pull-left.image {
+            margin-right: 15px;
+            /* Space between image and name */
+        }
+
+        .user-panel .pull-left.image img {
+            border-radius: 50%;
+            /* Makes the image circular */
+            width: 45px;
+            /* Adjust the size of the profile image */
+            height: 45px;
+            /* Adjust the size of the profile image */
+            object-fit: cover;
+            /* Ensures the image fits well inside the circle */
+        }
     </style>
 </head>
 
@@ -74,12 +112,12 @@ if ($stmt === false) {
 
         <aside class="main-sidebar">
             <section class="sidebar">
-                <div class="user-panel">
+                <div class="user-panel" onclick="window.location.href='Profile.php'" style="cursor: pointer;">
                     <div class="pull-left image">
-                        <img src="../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                        <img src="<?php echo htmlspecialchars($data1['dosen_img']); ?>" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
-                        <p><?php echo $nama_dosen; ?></p>
+                        <p><?php echo htmlspecialchars($nama_dosen); ?></p>
                         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                     </div>
                 </div>
@@ -88,7 +126,7 @@ if ($stmt === false) {
                     <li><a href="dashboardDosen.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
                     <li><a href="dpaDosen.php"><i class="fa fa-users"></i> <span>Daftar DPA</span></a></li>
                     <li class="active"><a href="daftarMahasiswa.php"><i class="fa fa-file-text-o"></i> <span>Daftar Mahasiswa</span></a></li>
-                    <li><a href="../laporanPelanggaran/formPelanggaran.php"><i class="fa fa-file-text-o"></i> <span> Laporan Pelanggaran</span></a></li>
+                    <li><a href="formPelanggaran.php"><i class="fa fa-file-text-o"></i> <span> Laporan Pelanggaran</span></a></li>
                     <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
                 </ul>
             </section>
