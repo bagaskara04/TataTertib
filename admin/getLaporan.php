@@ -32,7 +32,7 @@ if ($sqlsrv_query === false) {
 
 
 $output = '';
-$baseUrl = 'http://localhost/TataTertib/laporanPelanggaran/';
+$baseUrl = 'http://localhost/TataTertib/dosen/';
 while ($row = sqlsrv_fetch_array($sqlsrv_query, SQLSRV_FETCH_ASSOC)) {
     $buktiLink = $row['bukti_pelanggaran'] 
         ? '<a class="btn btn-primary" href="' . $baseUrl . htmlspecialchars($row['bukti_pelanggaran']) . '" target="_blank" btn-primary>Lihat Bukti</a>' 

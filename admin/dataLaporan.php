@@ -421,7 +421,6 @@ $data = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
                     method: 'POST',
                     dataType: 'json',
                     success: function(response) {
-                        console.log(response);
                         if (response.success) {
                             // Redirect ke file PDF yang dihasilkan
                             window.open(response.pdf_url, '_blank');
@@ -435,6 +434,9 @@ $data = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
                     }
                 });
             });
+
+
+
 
         });
     </script>

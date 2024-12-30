@@ -6,7 +6,7 @@ if (isset($_GET['id'])) {
     $laporanId = $_GET['id'];
 
     // tempat penyimpanan bukti
-    $baseUrl = 'http://localhost/TataTertib/laporanPelanggaran/';
+    $baseUrl = 'http://localhost/TataTertib/dosen/';
 
     // Query SQL
     $query = "
