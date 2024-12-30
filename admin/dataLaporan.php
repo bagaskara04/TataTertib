@@ -163,6 +163,9 @@ $data = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
                             </tbody>
                         </table>
                     </div>
+                    <div class="box-footer with-border">
+                        <button class="btn btn-info pull-right" id="rekapLaporanBtn">Rekap Data</button>
+                    </div>
                 </div>
             </section>
         </div>
@@ -228,6 +231,8 @@ $data = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
             </div>
         </div>
     </div>
+
+
     <div id="editLaporanModal" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -409,6 +414,28 @@ $data = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
                     }
                 });
             });
+
+            $(document).on('click', '#rekapLaporanBtn', function() {
+                $.ajax({
+                    url: 'rekapLaporan.php',
+                    method: 'POST',
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log(response);
+                        if (response.success) {
+                            // Redirect ke file PDF yang dihasilkan
+                            window.open(response.pdf_url, '_blank');
+                        } else {
+                            alert('Gagal: ' + response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        alert("Terjadi kesalahan saat merekap laporan.");
+                    }
+                });
+            });
+
         });
     </script>
 </body>
