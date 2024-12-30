@@ -1,6 +1,6 @@
 <?php
 
-include 'getDosenName.php';
+include 'getAdminName.php';
 // Cek apakah user sudah login
 if (!isset($_SESSION['user_id'])) {
     header("Location: loginPage.html");
@@ -9,12 +9,10 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id']; // Ambil user_id dari session
 
-// Query untuk mengambil data mahasiswa berdasarkan user_id dari tabel users
-$query = "SELECT d.nip, d.nama, d.TTL, d.jenis_kelamin, d.jabatan, d.email, d.no_phone, 
-                 d.alamat, d.dosen_img, k.nama_kelas
-          FROM dosen d
-          LEFT JOIN kelas k ON d.nip = k.nip  -- Menghubungkan berdasarkan nip jika dosen sebagai DPA
-          JOIN users u ON d.nip = u.nip  -- Menghubungkan berdasarkan nip
+// Query untuk mengambil data admin berdasarkan user_id dari tabel users
+$query = "SELECT s.staff_id, s.nama_staff, s.TTL, s.jenis_kelamin, s.jabatan, s.email, s.no_phone, s.staff_img
+          FROM staff s
+          JOIN users u ON s.staff_id = u.staff_id  -- Menghubungkan berdasarkan staff_id
           WHERE u.user_id = ?";  // Kondisi untuk user_id dari session
 $params = array($user_id);
 $stmt = sqlsrv_query($conn, $query, $params);
@@ -26,32 +24,30 @@ if ($stmt === false) {
 // Ambil hasil query
 $data = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
 
-
 // Handle form submission to update profile
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nip = $_POST['nip'];
-    $nama = $_POST['nama'];
+    $staff_id = $_POST['staff_id'];
+    $nama_staff = $_POST['nama_staff'];
     $ttl = $_POST['ttl'];
     $jenis_kelamin = $_POST['jenis_kelamin'];
     $jabatan = $_POST['jabatan'];
     $email = $_POST['email'];
     $no_phone = $_POST['no_phone'];
-    $alamat = $_POST['alamat'];
 
-    // Handle file upload for mahasiswa_img
-    if (isset($_FILES['dosen_img']) && $_FILES['dosen_img']['error'] === 0) {
+    // Handle file upload for staff_img
+    if (isset($_FILES['staff_img']) && $_FILES['staff_img']['error'] === 0) {
         // Get file information
-        $fileTmpPath = $_FILES['dosen_img']['tmp_name'];
-        $fileName = $_FILES['dosen_img']['name'];
-        $fileSize = $_FILES['dosen_img']['size'];
-        $fileType = $_FILES['dosen_img']['type'];
+        $fileTmpPath = $_FILES['staff_img']['tmp_name'];
+        $fileName = $_FILES['staff_img']['name'];
+        $fileSize = $_FILES['staff_img']['size'];
+        $fileType = $_FILES['staff_img']['type'];
 
         // Get file extension
         $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
         // Set upload directory and file name
         $uploadDir = 'image/';
-        $newFileName = 'profile_' . $nip . '.' . $fileExtension;
+        $newFileName = 'profile_' . $staff_id . '.' . $fileExtension;
         $uploadPath = $uploadDir . $newFileName;
 
         // Allowed file types (image only)
@@ -59,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (in_array($fileExtension, $allowedExtensions)) {
             // Move file to the upload directory
             if (move_uploaded_file($fileTmpPath, $uploadPath)) {
-                $dosen_img = $uploadPath; // Store the file path in database
+                $staff_img = $uploadPath; // Store the file path in database
             } else {
                 $errorMessage = "File upload failed!";
             }
@@ -67,13 +63,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errorMessage = "Only image files are allowed (jpg, jpeg, png, gif).";
         }
     } else {
-        $dosen_img = $data['dosen_img']; // Keep the existing image if no new one is uploaded
+        $staff_img = $data['staff_img']; // Keep the existing image if no new one is uploaded
     }
 
     // Update query
-    $updateQuery = "UPDATE dosen SET nama = ?, TTL = ?, jenis_kelamin = ?, jabatan = ?, email = ?, no_phone = ?, alamat = ?, dosen_img = ? 
-                    WHERE nip = ?";
-    $params = array($nama, $ttl, $jenis_kelamin, $jabatan, $email, $no_phone, $alamat, $dosen_img, $nip);
+    $updateQuery = "UPDATE staff SET nama_staff = ?, TTL = ?, jenis_kelamin = ?, jabatan = ?, email = ?, no_phone = ?, staff_img = ? 
+                    WHERE staff_id = ?";
+    $params = array($nama_staff, $ttl, $jenis_kelamin, $jabatan, $email, $no_phone, $staff_img, $staff_id);
     $updateStmt = sqlsrv_query($conn, $updateQuery, $params);
 
     if ($updateStmt === false) {
@@ -92,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profil Dosen</title>
+    <title>Edit Profil Admin</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -138,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 5px;
             margin-bottom: 10px;
             border-radius: 5px;
-            border: 1px solid #ccc;
+            border: 2px solid #ccc;
         }
 
         .btn-primary {
@@ -176,8 +172,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="wrapper">
         <!-- Header -->
         <header class="main-header">
-            <a href="dashboardDosen.php" class="logo">
-                <span class="logo-mini"><b>MHS</b></span>
+            <a href="dashboardAdmin.php" class="logo">
+                <span class="logo-mini"><b>STB</b></span>
                 <span class="logo-lg">SITATIB</span>
             </a>
             <nav class="navbar navbar-static-top">
@@ -193,21 +189,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- Sidebar -->
         <aside class="main-sidebar">
             <section class="sidebar">
-                <div class="user-panel" onclick="window.location.href='../dosen/Profile.php'" style="cursor: pointer;">
+                <div class="user-panel" onclick="window.location.href='../admin/Profile.php'" style="cursor: pointer;">
                     <div class="pull-left image">
-                        <img src="<?php echo htmlspecialchars($data['dosen_img']); ?>" class="img-circle" alt="User Image">
+                        <img src="<?php echo htmlspecialchars($data['staff_img']); ?>" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
-                        <p><?php echo htmlspecialchars($nama_dosen); ?></p>
+                        <p><?php echo htmlspecialchars($nama_admin); ?></p>
                         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                     </div>
                 </div>
                 <ul class="sidebar-menu">
                     <li class="header">Menu</li>
-                    <li><a href="dashboardDosen.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-                    <li><a href="dpaDosen.php"><i class="fa fa-users"></i> <span>Daftar DPA</span></a></li>
-                    <li><a href="daftarMahasiswa.php"><i class="fa fa-file-text-o"></i> <span>Daftar Mahasiswa</span></a></li>
-                    <li><a href="formPelanggaran.php"><i class="fa fa-file-text-o"></i> <span> Laporan Pelanggaran</span></a></li>
+                    <li><a href="dashboardAdmin.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+                    <li><a href="dataMahasiswa.php"><i class="fa fa-users"></i> <span>Data Mahasiswa</span></a></li>
+                    <li><a href="dataDosen.php"><i class="fa fa-users"></i> <span>Data Dosen</span></a></li>
+                    <li><a href="dataDPA.php"><i class="fa fa-file-text-o"></i> <span>Data DPA</span></a></li>
+                    <li><a href="dataLaporan.php"><i class="fa fa-file-text-o"></i> <span>Data Laporan Pelanggaran</span></a></li>
+                    <li><a href="dataKompensasi.php"><i class="fa fa-file-text-o"></i> <span>Data Kompensasi</span></a></li>
                     <li><a href="../logout.php"><i class="fa fa-sign-out"></i><span>Log Out</span></a></li>
                 </ul>
             </section>
@@ -217,7 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="content-wrapper">
             <!-- Header Konten -->
             <section class="content-header">
-                <h1>Edit Profil Dosen</h1>
+                <h1>Edit Profil Admin</h1>
             </section>
 
             <!-- Konten Profil -->
@@ -226,10 +224,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="box-body">
                         <div class="profile-form">
                             <form method="POST" enctype="multipart/form-data">
-                                <input type="hidden" name="nip" value="<?php echo htmlspecialchars($data['nip']); ?>">
+                                <input type="hidden" name="staff_id" value="<?php echo htmlspecialchars($data['staff_id']); ?>">
                                 <div class="form-group">
-                                    <label for="nama">Nama</label>
-                                    <input type="text" name="nama" class="form-control" value="<?php echo htmlspecialchars($data['nama']); ?>" required>
+                                    <label for="nama_staff">Nama</label>
+                                    <input type="text" name="nama_staff" class="form-control" value="<?php echo htmlspecialchars($data['nama_staff']); ?>" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="ttl">TTL</label>
@@ -255,12 +253,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <input type="text" name="no_phone" class="form-control" value="<?php echo htmlspecialchars($data['no_phone']); ?>" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="alamat">Alamat</label>
-                                    <input type="text" name="alamat" class="form-control" value="<?php echo htmlspecialchars($data['alamat']); ?>" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="dosen_img">Ganti Foto Profil</label>
-                                    <input type="file" name="dosen_img" class="form-control">
+                                    <label for="staff_img">Ganti Foto Profil</label>
+                                    <input type="file" name="staff_img" class="form-control">
                                 </div>
                                 <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                             </form>

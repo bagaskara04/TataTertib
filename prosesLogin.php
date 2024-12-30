@@ -33,6 +33,16 @@ class Login
             $_SESSION['username'] = $user['username'];
             $_SESSION['level'] = $user['level'];
 
+            // Jika user adalah admin, ambil staff_id dari tabel admin
+            if ($user['level'] == 1) {
+                $nimQuery = "SELECT staff_id FROM users WHERE user_id = ?";
+                $nimStmt = sqlsrv_query($this->conn, $nimQuery, array($user['user_id']));
+
+                if ($nimStmt && $nimRow = sqlsrv_fetch_array($nimStmt, SQLSRV_FETCH_ASSOC)) {
+                    $_SESSION['staff_id'] = $nimRow['staff_id'];
+                }
+            }
+
             // Jika user adalah dosen, ambil NIP dari tabel users
             if ($user['level'] == 2) {
                 $nipQuery = "SELECT nip FROM users WHERE user_id = ?";

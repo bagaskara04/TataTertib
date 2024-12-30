@@ -153,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .profile-form select,
         .profile-form input[type="file"] {
             width: 100%;
-            padding: 10px;
+            padding: 5px;
             margin-bottom: 10px;
             border-radius: 5px;
             border: 1px solid #ccc;
