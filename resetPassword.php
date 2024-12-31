@@ -1,86 +1,59 @@
 <?php
-include 'koneksi.php'; // Pastikan file koneksi database tersedia
+include 'koneksi.php';
 
-if (isset($_GET['token'])) {
-    $token = $_GET['token'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Ambil data dari form
+    $username = $_POST['username'];
+    $current_password = $_POST['current_password'];
+    $new_password = $_POST['new_password'];
 
-    // Query untuk memeriksa token
-    $query = "
-        SELECT * FROM mahasiswa WHERE reset_token = ? AND token_expiry > GETDATE()
-        UNION
-        SELECT * FROM staff WHERE reset_token = ? AND token_expiry > GETDATE()
-        UNION
-        SELECT * FROM dosen WHERE reset_token = ? AND token_expiry > GETDATE()
-    ";
+    // Validasi input
+    if (empty($username) || empty($current_password) || empty($new_password)) {
+        die("Semua kolom wajib diisi.");
+    }
 
-    // Siapkan statement dan bind parameter
-    $stmt = sqlsrv_prepare($conn, $query, array($token, $token, $token));
+    // Cek user dan password saat ini
+    $query = "SELECT * FROM users WHERE username = ? AND password = ?";
+    $params = array($username, $current_password);
+    $stmt = sqlsrv_query($conn, $query, $params);
 
-    if (!$stmt) {
+    if ($stmt === false) {
         die(print_r(sqlsrv_errors(), true));
     }
 
-    // Eksekusi query
-    $result = sqlsrv_execute($stmt);
-
-    if ($result === false) {
-        die(print_r(sqlsrv_errors(), true));
-    }
-
-    // Jika token valid
     if (sqlsrv_has_rows($stmt)) {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $newPassword = $_POST['newPassword'];
-            $confirmPassword = $_POST['confirmPassword'];
+        // User ditemukan dan password cocok
+        $update_query = "UPDATE users SET password = ? WHERE username = ?";
+        $update_params = array($new_password, $username);
+        $update_stmt = sqlsrv_query($conn, $update_query, $update_params);
 
-            if ($newPassword === $confirmPassword) {
-                // Hash password baru
-                $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-
-                // Update password di tabel yang sesuai
-                $updateQuery = "
-                    UPDATE mahasiswa SET password = ? WHERE reset_token = ?
-                    UNION
-                    UPDATE staff SET password = ? WHERE reset_token = ?
-                    UNION
-                    UPDATE dosen SET password = ? WHERE reset_token = ?
-                ";
-
-                // Siapkan statement untuk update
-                $updateStmt = sqlsrv_prepare($conn, $updateQuery, array($hashedPassword, $token, $hashedPassword, $token, $hashedPassword, $token));
-                if (!$updateStmt) {
-                    die(print_r(sqlsrv_errors(), true));
-                }
-
-                // Eksekusi query update
-                $updateResult = sqlsrv_execute($updateStmt);
-                if ($updateResult === false) {
-                    die(print_r(sqlsrv_errors(), true));
-                }
-
-                // Hapus token setelah reset
-                $clearTokenQuery = "
-                    UPDATE mahasiswa SET reset_token = NULL, token_expiry = NULL WHERE reset_token = ?
-                    UNION
-                    UPDATE staff SET reset_token = NULL, token_expiry = NULL WHERE reset_token = ?
-                    UNION
-                    UPDATE dosen SET reset_token = NULL, token_expiry = NULL WHERE reset_token = ?
-                ";
-                $clearStmt = sqlsrv_prepare($conn, $clearTokenQuery, array($token, $token, $token));
-                sqlsrv_execute($clearStmt);
-
-                echo "<script>
-                        alert('Password berhasil diperbarui!');
-                        window.location.href = 'loginPage.html';
-                      </script>";
-            } else {
-                echo "<script>alert('Password tidak cocok!'); window.history.back();</script>";
-            }
+        if ($update_stmt) {
+            echo "<script>
+                alert('Password berhasil dirubah');
+                window.location.href = 'loginPage.html';
+            </script>";
+            exit(); // Menghentikan eksekusi untuk mencegah konten lainnya ditampilkan
+        } else {
+            echo "<script>
+                alert('Terjadi kesalahan saat memperbarui password.');
+                window.location.href = 'lupaPassword.html';
+            </script>";
+            exit();
         }
     } else {
-        echo "<script>alert('Token tidak valid atau sudah kedaluwarsa!'); window.location.href = 'loginPage.html';</script>";
+        echo "<script>
+            alert('Username atau password saat ini salah.');
+            window.location.href = 'lupaPassword.html';
+        </script>";
+        exit();
     }
+
+    // Menutup statement
+    sqlsrv_free_stmt($stmt);
 } else {
-    echo "<script>alert('Token tidak ditemukan!'); window.location.href = 'loginPage.html';</script>";
+    echo "Metode tidak valid.";
 }
+
+// Menutup koneksi
+sqlsrv_close($conn);
 ?>
