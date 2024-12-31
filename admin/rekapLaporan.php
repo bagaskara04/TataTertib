@@ -12,18 +12,14 @@ $query = "
         d.nama AS dosen_nama,
         m.nama AS mahasiswa_nama,
         m.nim,
-        pelang.pelanggaran,
         pelang.tingkat,
-        sp.nama_sanksi AS sanksi,
         FORMAT(p.tanggal_pengaduan, 'yyyy-MM-dd HH:mm:ss') AS tanggal_pengaduan,
         p.status_pengaduan,
-        p.catatan,
-        p.bukti_pelanggaran
+        p.catatan
     FROM pengaduan p
     JOIN dosen d ON p.nip = d.nip
     JOIN mahasiswa m ON p.nim = m.nim
     JOIN pelanggaran pelang ON p.pelanggaran_id = pelang.pelanggaran_id
-    JOIN sanksi_pelanggaran sp ON pelang.sanksi_id = sp.sanksi_id
     ORDER BY p.pengaduan_id DESC
 ";
 $stmt = sqlsrv_query($conn, $query);
@@ -34,31 +30,39 @@ if ($stmt === false) {
 }
 
 // Buat instance PDF dan FPDF_Table
-$pdf = new PDF(); // Pastikan menggunakan FPDF_Table yang sudah extend FPDF
+$pdf = new FPDF_Table('L', 'mm', 'A4'); // Mengubah menjadi Landscape
 $pdf->AddPage();
 $pdf->SetFont('Arial', 'B', 12);
 $pdf->Cell(0, 10, 'Rekap Data Laporan Pengaduan', 0, 1, 'C');
 
-// Set lebar kolom dan header
-$header = ['ID', 'Dosen', 'Mahasiswa', 'NIM', 'Pelanggaran', 'Sanksi', 'Status'];
-$pdf->SetWidths([20, 40, 40, 20, 40, 30, 30]); // Set lebar kolom
+// Set header
+$header = ['ID', 'Dosen Pelapor', 'Nama Mahasiswa', 'NIM', 'Tingkat', 'Tanggal Pengaduan', 'Status', 'Catatan'];
+
+// Tentukan lebar kolom
+$pdf->SetWidths([5, 60, 50, 25, 20, 40, 25, 60]); // Lebar kolom sesuai panjang data
+
+// Tentukan perataan kolom header
+$pdf->SetAligns(['C', 'C', 'C', 'C', 'C', 'C', 'C', 'C']);  // Atur agar header dan data sejajar dengan baik
 
 // Set header
 $pdf->Row($header);
 
 // Isi data tabel
 $pdf->SetFont('Arial', '', 10);
+
+// Menyimpan panjang teks kolom untuk mengatur lebar kolom secara dinamis
 while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-    $data = [
-        $row['pengaduan_id'],
-        $row['dosen_nama'],
-        $row['mahasiswa_nama'],
-        $row['nim'],
-        $row['pelanggaran'],
-        $row['sanksi'],
-        $row['status_pengaduan']
-    ];
-    $pdf->Row($data); // Tambahkan baris data
+    // Data untuk setiap baris
+    $pdf->Cell($pdf->widths[0], 7, $row['pengaduan_id'], 1, 0, 'C');  // ID
+    $pdf->Cell($pdf->widths[1], 7, $row['dosen_nama'], 1, 0, 'L');  // Dosen Pelapor
+    $pdf->Cell($pdf->widths[2], 7, $row['mahasiswa_nama'], 1, 0, 'L');  // Nama Mahasiswa
+    $pdf->Cell($pdf->widths[3], 7, $row['nim'], 1, 0, 'C');  // NIM
+    $pdf->Cell($pdf->widths[4], 7, $row['tingkat'], 1, 0, 'L');  // Tingkat
+    $pdf->Cell($pdf->widths[5], 7, $row['tanggal_pengaduan'], 1, 0, 'C');  // Tanggal Pengaduan
+    $pdf->Cell($pdf->widths[6], 7, $row['status_pengaduan'], 1, 0, 'C');  // Status Pengaduan
+    $pdf->MultiCell($pdf->widths[7], 7, $row['catatan'], 1, 'L');  // Catatan
+
+    $pdf->Ln();  // Pindah ke baris berikutnya
 }
 
 // Simpan PDF
@@ -75,3 +79,4 @@ $pdf->Output('F', $filePath);
 
 // Mengembalikan URL PDF yang telah dibuat
 echo json_encode(['success' => true, 'pdf_url' => $filePath]);
+?>

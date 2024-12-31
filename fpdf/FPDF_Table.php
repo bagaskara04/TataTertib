@@ -1,102 +1,71 @@
 <?php
-require('fpdf.php');
+require_once('fpdf.php');
 
-class PDF extends FPDF
+class FPDF_Table extends FPDF
 {
-// Load data
-function LoadData($file)
-{
-    // Read file lines
-    $lines = file($file);
-    $data = array();
-    foreach($lines as $line)
-        $data[] = explode(';',trim($line));
-    return $data;
-}
+    var $widths;
+    var $aligns;
 
-// Simple table
-function BasicTable($header, $data)
-{
-    // Header
-    foreach($header as $col)
-        $this->Cell(40,7,$col,1);
-    $this->Ln();
-    // Data
-    foreach($data as $row)
+    function SetWidths($w)
     {
-        foreach($row as $col)
-            $this->Cell(40,6,$col,1);
+        // Set the array of column widths
+        $this->widths = $w;
+    }
+
+    function SetAligns($a)
+    {
+        // Set the array of column alignments
+        $this->aligns = $a;
+    }
+
+    function Row($data)
+    {
+        // Calculate the height of the row
+        $nb = 0;
+        for ($i = 0; $i < count($data); $i++) {
+            $nb = max($nb, $this->NbLines($this->widths[$i], $data[$i]));
+        }
+        $h = 6 * $nb;
+        $this->CheckPageBreak($h);
+
+        // Output the data
+        for ($i = 0; $i < count($data); $i++) {
+            $w = $this->widths[$i];
+            $a = isset($this->aligns[$i]) ? $this->aligns[$i] : 'C';
+            // Use MultiCell for long text in specific columns
+            if ($this->isLongText($data[$i])) {
+                $this->MultiCell($w, $h, $data[$i], 1, $a);
+            } else {
+                $this->Cell($w, $h, $data[$i], 1, 0, $a);
+            }
+        }
         $this->Ln();
     }
-}
 
-// Better table
-function ImprovedTable($header, $data)
-{
-    // Column widths
-    $w = array(40, 35, 40, 45);
-    // Header
-    for($i=0;$i<count($header);$i++)
-        $this->Cell($w[$i],7,$header[$i],1,0,'C');
-    $this->Ln();
-    // Data
-    foreach($data as $row)
+    function CheckPageBreak($h)
     {
-        $this->Cell($w[0],6,$row[0],'LR');
-        $this->Cell($w[1],6,$row[1],'LR');
-        $this->Cell($w[2],6,number_format($row[2]),'LR',0,'R');
-        $this->Cell($w[3],6,number_format($row[3]),'LR',0,'R');
-        $this->Ln();
+        // If the height of the row is greater than the space available, add a new page
+        if ($this->GetY() + $h > $this->PageBreakTrigger) {
+            $this->AddPage();
+        }
     }
-    // Closing line
-    $this->Cell(array_sum($w),0,'','T');
-}
 
-// Colored table
-function FancyTable($header, $data)
-{
-    // Colors, line width and bold font
-    $this->SetFillColor(255,0,0);
-    $this->SetTextColor(255);
-    $this->SetDrawColor(128,0,0);
-    $this->SetLineWidth(.3);
-    $this->SetFont('','B');
-    // Header
-    $w = array(40, 35, 40, 45);
-    for($i=0;$i<count($header);$i++)
-        $this->Cell($w[$i],7,$header[$i],1,0,'C',true);
-    $this->Ln();
-    // Color and font restoration
-    $this->SetFillColor(224,235,255);
-    $this->SetTextColor(0);
-    $this->SetFont('');
-    // Data
-    $fill = false;
-    foreach($data as $row)
+    function NbLines($w, $txt)
     {
-        $this->Cell($w[0],6,$row[0],'LR',0,'L',$fill);
-        $this->Cell($w[1],6,$row[1],'LR',0,'L',$fill);
-        $this->Cell($w[2],6,number_format($row[2]),'LR',0,'R',$fill);
-        $this->Cell($w[3],6,number_format($row[3]),'LR',0,'R',$fill);
-        $this->Ln();
-        $fill = !$fill;
+        // Calculate the number of lines needed to display a cell with a given width and text
+        $cw = $this->GetStringWidth($txt);
+        if ($w == 0) {
+            $w = $this->w - $this->rMargin - $this->x;
+        }
+        $n = ceil($cw / $w);
+        return $n;
     }
-    // Closing line
-    $this->Cell(array_sum($w),0,'','T');
-}
-}
 
-$pdf = new PDF();
-// Column headings
-$header = array('Country', 'Capital', 'Area (sq km)', 'Pop. (thousands)');
-// Data loading
-$data = $pdf->LoadData('countries.txt');
-$pdf->SetFont('Arial','',14);
-$pdf->AddPage();
-$pdf->BasicTable($header,$data);
-$pdf->AddPage();
-$pdf->ImprovedTable($header,$data);
-$pdf->AddPage();
-$pdf->FancyTable($header,$data);
-$pdf->Output();
+    function isLongText($text)
+    {
+        // Define which columns should use MultiCell based on their length or specific columns
+        // Example: If the text length exceeds 30 characters, we use MultiCell
+        return strlen($text) > 30;
+    }
+}
 ?>
